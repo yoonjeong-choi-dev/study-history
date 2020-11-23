@@ -1,0 +1,60 @@
+//Linked List
+//Dummy기반
+
+#include "DLinkedList.h"
+
+
+int Who_is_first(int d1, int d2)
+{
+	if (d1 < d2)
+		return 1;
+	else
+		return 0;
+}
+
+int main()
+{
+	List list;
+	int data;
+	ListInit(&list);
+
+	Set_sort_rule(&list, Who_is_first);
+
+	LInsert(&list, 11); LInsert(&list, 11);
+	LInsert(&list, 22); LInsert(&list, 22);
+	LInsert(&list, 33);
+
+	cout << "number of data in the list : " << LCount(&list) << endl;
+
+	if (LFirst(&list, &data))
+	{
+		cout << data << " ";
+		while (LNext(&list, &data))
+			cout << data << " ";
+	}
+	cout << endl;
+
+	if (LFirst(&list, &data))
+	{
+		if (data == 22)
+			LRemove(&list);
+
+		while (LNext(&list, &data))
+		{
+			if (data == 22)
+				LRemove(&list);
+		}
+	}
+
+	cout << "number of data in the list : " << LCount(&list) << endl;
+
+	if (LFirst(&list, &data))
+	{
+		cout << data << " ";
+		while (LNext(&list, &data))
+			cout << data << " ";
+	}
+	cout << endl;
+
+	return 0;
+}
