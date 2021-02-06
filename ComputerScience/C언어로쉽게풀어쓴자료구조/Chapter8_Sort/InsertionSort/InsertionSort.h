@@ -5,13 +5,6 @@
 #include <vector>
 
 class InsertionSort {
-	template<typename T>
-	static void swap(T& a, T& b) {
-		T temp = a;
-		a = b;
-		b = temp;
-	}
-
 public:
 	template <typename T>
 	static void Sort(std::vector<T>& arr, int (*comp)(const T& a, const T& b)) {
@@ -26,7 +19,7 @@ public:
 				// 삽입되어야 할 데이터가 arr[insertIdx] 보다 먼저 와야 하는 경우
 				// => arr[insertIdx] 를 뒤로 보내준다
 				if (comp(insertData, arr[insertIdx]) == 1) {
-					swap(arr[insertIdx], arr[insertIdx + 1]);
+					arr[insertIdx + 1] = arr[insertIdx];
 				}
 				// 삽입 위치(insertIdx+1)를 찾은 경우 끝
 				else {
