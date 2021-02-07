@@ -6,14 +6,6 @@
 class MergeSort {
 
 	template<typename T>
-	static void swap(T& a, T& b) {
-		T temp = a;
-		a = b;
-		b = temp;
-	}
-
-
-	template<typename T>
 	static void _mergeSort(std::vector<T>& arr, int (*comp)(const T& a, const T& b), T* temp, int start, int end) {
 		// 부분 리스트 길이가 1이하인 경우 => 끝
 		if (start >= end) {
