@@ -3,24 +3,19 @@
 
 template<typename T>
 Heap<T>::Heap(int capacity) {
-_size = 0;
+	_size = 0;
 
-_capacity = 1;
-while (_capacity <= capacity + 1) {
-	_capacity *= 2;
-}
+	_capacity = 1;
+	while (_capacity <= capacity + 1) {
+		_capacity *= 2;
+	}
 
-_tree = new T[_capacity];
+	_tree = new T[_capacity];
 
 
-comp = [](const T& a, const T& b) -> int {
-	if (a < b)
-		return 1;
-	else if (a > b)
-		return -1;
-	else
-		return 0;
-};
+	comp = [](const T& a, const T& b) -> int {
+		return a < b;
+	};
 }
 
 template<typename T>
@@ -77,6 +72,7 @@ void Heap<T>::Insert(const T& item) {
 
 	// 데이터 삽입
 	_tree[insertIdx] = item;
+	
 }
 
 template<typename T>
@@ -103,7 +99,7 @@ T Heap<T>::Remove() {
 		}
 
 		// 현재 노드가 자식 노드의 부모가 되는 경우 탐색 끝
-		if (comp(tail, _tree[leftChildIdx]) != -1){
+		if (comp(tail, _tree[leftChildIdx]) == 1 ) {
 			break;
 		}
 
@@ -136,7 +132,7 @@ void Heap<T>::Print() {
 	while (curNode <= _size) {
 		std::cout << _tree[curNode] << " ";
 
-		if (curNode == level-1) {
+		if (curNode == level - 1) {
 			level *= 2;
 			std::cout << std::endl;
 		}
