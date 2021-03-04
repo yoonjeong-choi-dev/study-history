@@ -1,0 +1,62 @@
+- 광원의 위치가 무한히 떨어져 있다고 가정한 광원
+	- 광선들은 서로 나란하게 나아간다
+	- 거리에 따라 빛이 소멸되지 않는다
+	  i.e 빛은 무한히 나아간다
+	- 전체 영역은 동일한 빛의 세기가 가해진다
+	- 모든 객체가 빛을 받는다
+	- 그림자 생성 O
+	
+- Spot Light과 동일한 속성들
+	  : position, target, intensity, distance, 
+	    castShadow, onlyShadow, shadowDarkness
+		shadowCameraNear, shadowCameraFar, shadowCameraVisible,
+		shadowMapWidth, shadowMapHeight, shadowBias
+	- castShadow
+		- true인 경우 그림자를 만든다
+		- 도중에 off(false)하는 경우 이전 그림자는 계속 렌더링되는 문제
+	- distance
+		: 빛이 비추는 거리
+		- 0인 경우, 거리에 따라 빛의 세기가 감소 x
+	- exponent
+		: 거리에 따른 세기 감소 
+		- 발산되는 빛의 세기가 광원의 위치에서 얼마나 빨리 감소하는지 결정
+	- intensity
+		: 빛의 세기
+	- onlyShadow
+		- true인 경우 그림자만 만들고, 빛을 비추지 않음
+		- true인 경우 해당 빛이 물체의 material에 영향 X
+	- position
+		: 광원의 위치
+	- shadowBias
+		- 그림자를 없애거나 그림자의 방향을 객체 쪽으로 이동
+		- 이상한 그림자 현상 발생시, 해당 속성 값을 작은 값으로 줄여 해결 가능
+	- shadowCameraFar, shadowCameraNear, shadowCameraFov
+		- 그림자 제어 속성
+		- 원근 투영의 가시 부피처럼 그림자 부피의 frustum 설정
+	- shadowCameraVisible
+		- 광원에 대한 그림자 부피를 보이게 하는 설정
+		  i.e 광원이 어디서 어떻게 그림자를 만드는지 확인 가능
+		- castShadow가 참인 경우에만 렌더링된다
+	- shadowDarkness
+		: 그림자의 어두운 정도
+	- shadowMapWidth, shadowMapHeight
+		- 그림자를 만드는데 사용되는 해상도(픽셀 수 ) 결정
+		- 장면이 렌더링된 후에는 변경 불가능(baked)
+	- target
+		- 광원이 향하는 방향 결정
+		- 위치(Vector3)나 객체(Object3D)로 지정 가능
+		
+- Cascade 관련 속성
+	- 큰 영역에서 그림자를 생성하고자 할 때 사용되는 속성들
+	- shadowCascadeCount에 설정된 값에 따라 그림자를 분할하여 생성
+	- 뷰포인트와 가까운 곳은 세밀한 그림자가, 멀리 떨어진 곳에서는 덜 자세한 그림자가 생성
+	- shadowCascade, shadowCascadeCount, shadowCascadeBias,
+	  shadowCascadeWidth, shadowCascadeHeight,
+	  shadowCascadeNearZ, shadowCascadeFarZ
+	
+	
+	
+	
+	
+	
+		
