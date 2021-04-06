@@ -1,0 +1,12 @@
+html
+    head 
+        title Index Page
+    body 
+        h1 Hello Jade!
+        h2 My name is #{name}
+        h2=description
+        hr
+        - for(var i=0;i<5;i++){
+            p
+                a(href="http://www.naver.com", data-test="multiple Attribute") Go to Naver
+        - }
