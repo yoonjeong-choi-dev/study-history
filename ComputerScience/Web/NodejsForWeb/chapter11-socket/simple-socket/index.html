@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Echo Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script>
+    window.onload = ()=>{
+      console.log("client connected");
+
+      var input = document.getElementById("message");
+      var output = document.getElementById("from-server");
+      var button = document.getElementById("button");
+      
+      // Socket connection
+      var socket = io.connect();
+
+      // Listen event
+      socket.on("chat", (data)=>{
+        output.innerHTML = data;
+      });
+
+      // button event : send message to server
+      button.onclick = ()=>{
+        var text = input.value;
+
+        socket.emit("chatchat", text);
+      }
+    }
+    
+  </script>
+</head>
+<body>
+  <input type="text" id="message"/>
+  <input type="button" id="button" value="echo">
+  <div id="from-server" style="font-size:30px;font-weight:bold"></div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        window.onload = () => {
+
+            var user = prompt("Enter your name", "");
+
+            var username = document.getElementById("username");
+            username.value = user;
+
+            var message = document.getElementById("message");
+            var content = document.getElementById("content");
+            var button = document.getElementById("button");
+
+            // Socket connection
+            var socket = io.connect();
+
+            // Listen event
+            socket.on("message", (data) => {
+                var output = "";
+                output += "<li>";
+                output += "  <h3>" + data.name + "</h3>";
+                output += "  <p>" + data.message + "</p>";
+                output += "  <p>" + data.date + "</p>";
+                output += "</li>";
+
+                content.innerHTML += output;
+            });
+
+            // button event : send message to server
+            button.onclick = () => {
+                var text = message.value;
+                socket.emit("message",{
+                    name: user,
+                    message: text,
+                    date: new Date().toUTCString()
+                });
+
+            }
+        }
+
+    </script>
+</head>
+
+<body>
+    <h1> Simple Chat</h1>
+    <p>Chat with Socket.io</p>
+    <hr />
+
+    <input type="text" id="username" disabled>
+    <input type="text" id="message" />
+    <input type="button" id="button" value="send">
+    <ul id="content">
+
+    </ul>
+</body>
+
+</html>
