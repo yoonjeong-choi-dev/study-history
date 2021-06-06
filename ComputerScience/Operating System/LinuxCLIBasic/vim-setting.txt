@@ -1,0 +1,25 @@
+# 설정 방법
+- 아래의 텍스트를 특정 경로의 파일로 생성
+- 해당 유저만 사용
+ : /home/$user_name/.vimrc
+- 모든 유저 사용
+: /ect/vim/vimrc
+
+# 설정 텍스트
+syntax on
+set tabstop=4
+set autoindent
+set cindent
+set smartindent
+set ruler
+set number
+set sm
+set tabstop=4
+set shiftwidth=4
+set title
+set cursorline
+set backup
+set incsearch
+syntax on
+set hlsearch
+set encoding=utf8
