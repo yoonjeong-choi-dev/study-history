@@ -19,11 +19,11 @@ pass_params(){
     print_params "$*"
 
     # $@ :
-    echo -e "\n" '$@* :'
+    echo -e "\n" '$@ :'
     print_params $@
 
     # "$@" :
-    echo -e "\n" '"$@*" :'
+    echo -e "\n" '"$@" :'
     print_params "$@"
 }
 
