@@ -1,4 +1,4 @@
-package aop002;
+package aop003;
 
 public class Girl implements Person{
 	
