@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: LimitRange # PVC 요청 시, 용량을 제한하는 오브젝트 => PVC 요청시 제한 요건 충족 못하면 에러 발생
+metadata:
+  name: storagelimits
+spec:
+  limits:
+  - type: PersistentVolumeClaim # 제한할 타입 : PVC
+    max:
+      storage: 5Mi
+    min:
+      storage: 1Mi

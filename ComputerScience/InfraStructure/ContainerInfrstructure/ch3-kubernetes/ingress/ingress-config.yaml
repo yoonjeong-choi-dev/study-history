@@ -1,0 +1,27 @@
+# 사용자 요구에 맞게 인그레스의 경로와 작동을 정의 : 라우팅 역할
+# 인그레스 설치파일(ingress-nginx.yaml)은 https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml 에서 다운
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  # 통신할 인그레스 컨트롤러 이름 : 설치한 nginx 인그레스의 이름(.metadata.name) 
+  name: ingress-nginx 
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /   
+spec:
+  rules:
+  - http:
+      # 각 경로에 대해 연결할 서비스 정의
+      paths:
+      # 기본 경로 지정
+      - path:
+        backend:
+          serviceName: hname-svc-default
+          servicePort: 80
+      - path: /ip
+        backend:
+          serviceName: ip-svc
+          servicePort: 80
+      - path: /your-directory
+        backend:
+          serviceName: your-svc
+          servicePort: 80

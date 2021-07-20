@@ -1,0 +1,12 @@
+# 스테이트풀셋은 expose로 서비스 등록 불가능
+# => 로드밸런서 서비스 구성 파일이 필요
+apiVersion: v1
+kind: Service
+metadata:
+  name: nfs-pvc-sts-svc
+spec:
+  selector:
+    app: nfs-pvc-sts
+  ports:
+    - port: 80
+  type: LoadBalancer

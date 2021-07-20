@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume  # PV 생성
+metadata:
+  name: nfs-pv
+spec:
+  # 용량 설정이 아닌 쓸 수 있는 양을 레이블로 붙임
+  capacity:
+    storage: 100Mi      
+  # 어떤 방식으로 사용하는지 정의
+  accessModes:
+    - ReadWriteMany # 여러 노드가 읽고 쓸 수 있도록 마운트하는 옵션
+  persistentVolumeReclaimPolicy: Retain # PV 삭제시 동작 방식 : 유지
+  nfs:
+    server: 192.168.1.10  # nfs 서버 주소
+    path: /nfs_shared     # nfs 서버의 nfs 디렉터리

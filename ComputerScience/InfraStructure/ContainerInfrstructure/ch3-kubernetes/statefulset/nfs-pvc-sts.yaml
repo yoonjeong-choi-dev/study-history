@@ -1,0 +1,28 @@
+# 디플로이먼트 설정 파일인 volume/nfs-pvc-deploy와 다른 점은 serviceName 필드 하나
+apiVersion: apps/v1
+kind: StatefulSet     # 스테이트풀셋으로 pvc 요청들 생성
+metadata:
+  name: nfs-pvc-sts
+spec:
+  replicas: 4         # 스테이트풀셋으로 생성하므로 순서 보장
+  serviceName: sts-svc-domain # 스테이트풀셋에서 필요한 인자
+  selector:
+    matchLabels:
+      app: nfs-pvc-sts
+  template:
+    metadata:
+      labels:
+        app: nfs-pvc-sts
+    spec:
+      containers:
+      - name: audit-trail
+        image: sysnet4admin/audit-trail
+        # 해당 컨테이너에 마운트할 볼륨의 이름 및 디렉터리 설정
+        volumeMounts:
+        - name: nfs-vol
+          mountPath: /audit
+      volumes:
+      - name: nfs-vol
+        # 마운트할 볼륨을 생성하는 PVC의 이름 설정
+        persistentVolumeClaim:
+          claimName: nfs-pvc

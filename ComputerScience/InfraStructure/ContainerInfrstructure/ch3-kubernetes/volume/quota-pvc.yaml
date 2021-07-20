@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ResourceQuota # 스토리지 리소스의 사용량을 제한하는 오브젝트
+metadata:
+  name: storagequota
+spec:
+  hard:
+    persistentvolumeclaims: "5" # PVC 요청은 최대 5개
+    requests.storage: "25Mi"    # 요청 용량은 최대 25Mi

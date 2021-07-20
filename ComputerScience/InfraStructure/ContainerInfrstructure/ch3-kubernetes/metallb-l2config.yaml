@@ -1,0 +1,19 @@
+# Metallb 설정 파일
+# Metallb 설치 파일은 https://raw.githubusercontent.com/metallb/metallb/v0.8.3/manifests/metallb.yaml에서 다운
+
+apiVersion: v1
+kind: ConfigMap # 설정이 정의되는 쿠버네티스 오브젝트
+
+metadata:
+  namespace: metallb-system # Metallb 설치 파일에서 정의된 네임스페이스
+  name: config
+
+data:
+  config: |
+    address-pools:
+    - name: nginx-ip-range
+      # 로드밸런서 동작 방식 : L2
+      protocol: layer2
+      # 로드밸런서  주소
+      addresses:
+      - 192.168.1.11-192.168.1.13    

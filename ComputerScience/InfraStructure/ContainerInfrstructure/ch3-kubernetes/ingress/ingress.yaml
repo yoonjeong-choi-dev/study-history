@@ -1,0 +1,25 @@
+# 생성(ingress-nginx) 및 설정(ingress-config)된 인그레스를 외부로 노출하는 서비스 정의
+apiVersion: v1
+kind: Service
+metadata:
+  # 노출시킬 인그레스 컨트롤러 이름과 네임스페이스 설정
+  name: nginx-ingress-controller  
+  namespace: ingress-nginx
+spec:
+  # 노출 및 연결할 프로토콜 및 포트 정의
+  ports:
+  # http의 경우 30100으로 들어온 요청을 80번으로 넘긴다
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 30100
+  # https의 경우 30101으로 들어온 요청을 433번으로 넘긴다
+  - name: https
+    protocol: TCP
+    port: 443
+    targetPort: 443
+    nodePort: 30101
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+  type: NodePort

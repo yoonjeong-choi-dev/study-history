@@ -1,0 +1,16 @@
+# 로드밸런서 서비스가 아닌 헤드리스 서비스로 nfs-pcv-sts 디플로이먼트 노출
+# i.e nfs-pvc-sts-svc 대신 사용하여 외부 접근 허용
+
+# 헤드리스 서비스
+# - externel-ip를 할당하지 않아 ip 절약 가능
+# - 파드의 이름과 노출된 서비스 이름등을 조합하여 도메인 이름으로 외부에서 통신 가능 (by CoreDNS)
+apiVersion: v1
+kind: Service
+metadata:
+  name: sts-svc-domain
+spec:
+  selector:
+    app: nfs-pvc-sts
+  ports:
+    - port: 80
+  clusterIP: None

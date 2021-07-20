@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment  # PV/PVC 없이 볼륨 마운트를 한 디플로이먼트
+metadata:
+  name: simple-nfs-mount
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: simple-nfs-mount
+  template:
+    metadata:
+      labels:
+        app: simple-nfs-mount
+    spec:
+      containers:
+      - name: audit-trail
+        image: sysnet4admin/audit-trail
+        # 마운트할 볼륨의 이름과 위치 지정
+        volumeMounts:
+        - name: nfs-vol
+          mountPath: /audit
+      # PVC,PV 없이 직접 볼륨 파운트
+      volumes:
+      - name: nfs-vol
+        # nfs 서버 주소 및 디렉터리
+        nfs:
+          server: 192.168.1.10
+          path: /nfs_shared

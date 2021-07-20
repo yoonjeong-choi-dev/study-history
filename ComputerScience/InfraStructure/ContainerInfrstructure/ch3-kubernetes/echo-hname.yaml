@@ -1,0 +1,25 @@
+# 생성할 오브젝트를 포함하는 API 버전 및 종류
+apiVersion: apps/v1 # 제공 api는 마스터 노드에서 "kubectl api-versions" 로 확인
+kind: Deployment
+
+# 메타 데이터 : 디플로이먼트 자체에 대한 데이터
+metadata:
+  name: echo-hname
+  labels:
+    app: nginx
+
+spec:
+  # 레플리카(pod) 갯수 설정
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  # 각 pod의 설정
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: echo-hname
+        image: sysnet4admin/echo-hname

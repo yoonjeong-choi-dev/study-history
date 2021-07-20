@@ -1,0 +1,19 @@
+# 생성할 오브젝트를 포함하는 API 버전 및 종류
+apiVersion: v1 # 제공 api는 마스터 노드에서 "kubectl api-versions" 로 확인
+kind: Service       # 서비스 : 외부에서 클러스터를 접속하는 방법
+
+# 메타 데이터 : 디플로이먼트 자체에 대한 데이터
+metadata:
+  name: nodeport-service
+spec:
+  selector:
+    app: nodeport-pods  # 연결할 디플로이먼트 이름
+  # 네트워크 설정 : 사용할 프로토콜과 in/out 포트 정의
+  ports: 
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 30000
+  type: NodePort  # 서비스 타입 정의
+

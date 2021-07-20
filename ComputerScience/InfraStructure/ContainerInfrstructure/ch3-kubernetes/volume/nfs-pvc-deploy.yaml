@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment  # 설정된 PVC를 볼륨으로 사용하는 디플로이먼트 생성
+metadata:
+  name: nfs-pvc-deploy
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nfs-pvc-deploy
+  template:
+    metadata:
+      labels:
+        app: nfs-pvc-deploy
+    spec:
+      containers:
+      - name: audit-trail
+        image: sysnet4admin/audit-trail
+        # 마운트할 볼륨의 이름과 위치 지정
+        volumeMounts:
+        - name: nfs-vol
+          mountPath: /audit
+      volumes:
+      - name: nfs-vol
+        # 마운트할 볼륨을 생성하는 PVC의 이름 설정
+        persistentVolumeClaim:
+          claimName: nfs-pvc
