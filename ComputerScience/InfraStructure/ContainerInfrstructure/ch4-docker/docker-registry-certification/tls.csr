@@ -1,0 +1,27 @@
+# 도커 레지스트리 구동을 위한 인증서 설정 파일
+
+[req]   
+distinguished_name = private_registry_cert_req  # 참고할 인증서 정보 필드
+x509_extensions = v3_req
+prompt = no
+
+# 인증서 요청자의 소속 정보 및 서버 주소 설정
+[private_registry_cert_req]
+C = KR
+ST = SEOUL
+L = SEOUL
+O = yjchoi
+OU = YJCHOI
+CN = 192.168.1.10       # 인증 요청 서버 IP
+
+
+[v3_req]
+keyUsage = keyEncipherment, dataEncipherment    # 키의 사용목적
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names                     # 주체 대체 이름(SAN) 필드 설정
+
+# 주체 대체 이름 필드 : 이 부분이 없는 경우, 도커에서 인증서 검증 실패
+# 호스트 이름 및 IP 설정
+[alt_names]
+DNS.0 = m-k8s
+IP.0 = 192.168.1.10

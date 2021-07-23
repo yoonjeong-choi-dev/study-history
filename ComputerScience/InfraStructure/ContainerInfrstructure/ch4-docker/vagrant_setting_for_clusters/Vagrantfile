@@ -1,0 +1,82 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+
+# 뤼비로 코드를 읽어 실행시키는 API 버전 설정 및 설정 시작
+Vagrant.configure("2") do |config|
+  # 쿠버네티스 클러스터 구성을 위한 설정
+  N = 3 # 최대 워커 노드 개수
+  Ver = '1.18.4' # 쿠버네티스 버전
+
+  #=============#
+  # Master Node #
+  #=============#
+
+  # 가상 머신 설정 시작
+  config.vm.define "m-k8s" do |cfg|
+    # 베어그런트 이미지 설정
+    cfg.vm.box = "sysnet4admin/CentOS-k8s"
+    cfg.vm.box_version = "0.7.4"
+
+    # 프로바이더(가상머신 배포 소프트웨어) 설정
+    cfg.vm.provider "virtualbox" do |vb|
+      vb.name = "m-k8s(yjchoi)"
+      vb.cpus = 2
+      vb.memory = 3072
+      vb.customize ["modifyvm", :id, "--groups", "/k8s-SM(yjchoi)"]
+    end
+
+    # 가상 머신 호스트 이름
+    cfg.vm.host_name = "m-k8s"
+    # 사설 ip 설정
+    cfg.vm.network "private_network", ip: "192.168.1.10"
+    # ssh 통신을 호스트(60010)에서 게스트(22)로 포트 포워딩
+    cfg.vm.network "forwarded_port", guest: 22, host: 60010, auto_correct: true, id: "ssh"
+    # 호스트와 게스트 사이의 디렉터리 동기화 기능 비활성화
+    cfg.vm.synced_folder "../data", "/vagrant", disabled: true
+    # 인스턴스 설정을 위한 쉘 스크립트 실행
+    cfg.vm.provision "shell", path: "config.sh", args: N
+    # 패키지 설치를 위한 쉘 스크립트 실행
+    cfg.vm.provision "shell", path: "install_pakage.sh", args: [Ver, "Main"]
+    # 마스터 노드 설정을 위한 쉘 스크립트 실행
+    cfg.vm.provision "shell", path: "master_node.sh"
+    
+  end
+
+
+  #=============#
+  # Added Noded #
+  #=============#
+  # 반복문을 사용하여 N개의 노드 추가
+  (1..N).each do |i|
+    config.vm.define "w#{i}-k8s" do |cfg|
+      # 베어그런트 이미지 설정
+      cfg.vm.box = "sysnet4admin/CentOS-k8s"
+      cfg.vm.box_version = "0.7.4"
+
+      # 프로바이더(가상머신 배포 소프트웨어) 설정
+      cfg.vm.provider "virtualbox" do |vb|
+        vb.name = "w#{i}-k8s(yjchoi)"
+        vb.cpus = 1
+        vb.memory = 2560
+        vb.customize ["modifyvm", :id, "--groups", "/k8s-SM(yjchoi)"]
+      end
+
+      # 가상 머신 호스트 이름
+      cfg.vm.host_name = "w#{i}-k8s"
+      # 사설 ip 설정
+      cfg.vm.network "private_network", ip: "192.168.1.10#{i}"
+      # ssh 통신을 호스트(6001i)에서 게스트(22)로 포트 포워딩
+      cfg.vm.network "forwarded_port", guest: 22, host: "6010#{i}", auto_correct: true, id: "ssh"
+      # 호스트와 게스트 사이의 디렉터리 동기화 기능 비활성화
+      cfg.vm.synced_folder "../data", "/vagrant", disabled: true
+      # 인스턴스 설정을 위한 쉘 스크립트 실행
+      cfg.vm.provision "shell", path: "config.sh", args: N
+      # 패키지 설치를 위한 쉘 스크립트 실행
+      cfg.vm.provision "shell", path: "install_pakage.sh", args: Ver
+      # 마스터 노드 설정을 위한 쉘 스크립트 실행
+      cfg.vm.provision "shell", path: "worker_nodes.sh"
+    end
+  end
+
+end
