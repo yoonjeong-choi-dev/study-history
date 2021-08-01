@@ -1,0 +1,3 @@
+module time-out
+
+go 1.16
