@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Pure React Example</title>
+</head>
+
+<body>
+    <!-- Main Container -->
+    <div id="root"></div>
+
+    <!-- React Library -->
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <script>
+        // 요리 재료 컴포넌트
+        const IngredientsComponent = ({ ingredientsList }) => (
+            React.createElement(
+                "ul",
+                { "className": "ingredients" },
+                ingredientsList.map((ingredient, idx) => React.createElement("li", { key: idx }, ingredient))
+            )
+        )
+
+        // 레시피 컴포넌트
+        const RecipeComponent = ({recipeSteps}) => (
+            React.createElement(
+                "section",
+                { "className": "instructions" },
+                React.createElement("h2", null, "조리 절차"),
+                recipeSteps.map((step, idx) => React.createElement("p", { key: idx }, idx + ". " + step))
+            )
+        )
+        const baseDom = document.getElementById("root");
+
+        const ingredientsList1 = [
+            "연어 900g",
+            "신선한 로즈마리 5가지",
+            "올리브 오일 2 테이블스푼",
+            "작은 레몬 2조각",
+            "코셔 소금 1 티스푼",
+            "다진 마늘 4쪽"
+        ]
+
+        const recipeSteps1 = [
+            "오븐을 190도로 예열한다",
+            "알루미늄 호일에 올리브 오일을 가볍게 두른다",
+            "로즈마리, 슬라이스 레몬, 다진 마늘을 연어 위에 얹는다",
+            "완전히 익을 때까지 15~20분간 굽는다",
+            "오븐에서 그릇을 꺼낸다"
+        ];
+
+        const mainDish = React.createElement(
+            "section",
+            { id: "baked-salmon" },
+            React.createElement("h1", null, "구운 연어"),
+            React.createElement(IngredientsComponent, { ingredientsList: ingredientsList1 }, null),
+            React.createElement(RecipeComponent, {recipeSteps: recipeSteps1}, null),
+        );
+
+
+        const dessert = React.createElement("h2", null, "코코넛 크림 파이");
+        ReactDOM.render([mainDish, dessert], baseDom);
+
+    </script>
+</body>
+
+</html>
