@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Simple JSX Example</title>
+</head>
+
+<body>
+    <!-- Main Container -->
+    <div id="root"></div>
+
+    <!-- React Library -->
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Script for JSX -->
+    <script type="text/babel">
+        // Data for Test
+        const data = [
+            {
+                name: "구운 연어",
+                ingredients: [
+                    { name: "연어", amount: 1, measurement: "그램" },
+                    { name: "잣", amount: 1, measurement: "컵" },
+                    { name: "버터 상추", amount: 2, measurement: "컵" },
+                    { name: "옐로 스쿼시", amount: 1, measurement: "개" },
+                    { name: "올리브 오일", amount: 0.5, measurement: "컵" },
+                    { name: "마늘", amount: 3, measurement: "쪽" },
+                ],
+                steps: [
+                    "오븐을 190도로 예열한다",
+                    "유리 베이킹 그릇에 올리브 오일을 두른다",
+                    "연어, 마늘, 잣을 그릇에 담는다",
+                    "오븐에서 15분간 익힌다",
+                    "옐로 스쿼시를 추가하고 다시 30분간 오븐에서 익힌다",
+                    "오븐에서 그릇을 꺼내어 15분간 식힌 다음에 상추를 곁들여 내놓는다"
+                ],
+            },
+            {
+                name: "생선 타코",
+                ingredients: [
+                    { name: "흰살생선", amount: 1, measurement: "그램" },
+                    { name: "치즈", amount: 1, measurement: "컵" },
+                    { name: "아이스버그 상추", amount: 2, measurement: "컵" },
+                    { name: "토마토", amount: 2, measurement: "개(큰것)" },
+                    { name: "또띠아", amount: 3, measurement: "개" },
+                ],
+                steps: [
+                    "생성을 그릴에 익힌다",
+                    "또디아 3장 위에 생선을 얹는다",
+                    "상추, 토마토, 치즈를 토핑한다",
+                ],
+            },
+        ];
+
+
+        // 레시피 컴포넌트
+        const RecipeComponent = ({ name, ingredients, steps }) => {
+            return (
+                <section id={name.toLowerCase().replace(/ /g, "-")}>
+                    <h1>{name}</h1>
+                    <ul className="ingredinets">
+                        {ingredients.map((ingredient, i) => (
+                            <li key={i}>{ingredient.name} : {ingredient.amount} ({ingredient.measurement})</li>
+                        ))}
+                    </ul>
+                    <section className="instructions">
+                        <h2>요리 절차</h2>
+                        {steps.map((step, idx) => (
+                            <p key={idx}> {idx}. {step}</p>
+                        ))}
+                    </section>
+                </section>
+            )
+        }
+
+
+        // 메뉴 컴포넌트 : 여러 레시피 컴포넌트로 구성 
+        const Menu = ({title, recipes}) => {
+            return (
+                <article>
+                    <header>
+                        <h1>{title}</h1>    
+                    </header>    
+                    <div className="recipes">
+                        {recipes.map((recipe, idx) => (
+                           <RecipeComponent key={idx} {...recipe} />     
+                        ))}    
+                    </div>
+                </article>
+
+            )
+        }
+        
+        const baseDom = document.getElementById("root");
+        ReactDOM.render(
+            <Menu recipes={data} title="맛있는 조리법!" />,
+            baseDom
+        );
+
+    </script>
+</body>
+
+</html>
