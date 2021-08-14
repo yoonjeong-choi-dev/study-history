@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+message AnotherMessage {
+  string name = 1;
+  int64 num64 = 2;
+}
+
+message SimpleMessage {
+  // 각 필드 이름은 인터페이스 코드를 통해 생성된 객체 멤버 변수 데이터 접근시 사
+  string name = 1;
+  int64 num64 = 2;
+  double float64 = 3;
+  bytes uuid = 4;
+  enum Type {
+    Ping = 0;
+    Urgent = 1;
+  }
+  Type type = 5;
+
+  // List<string>
+  repeated string name_list = 6;
+
+  // List<Int64>
+  repeated int64 num64_list = 7;
+
+  // Map<string, string>
+  map<string, string> map_field = 8;
+
+  AnotherMessage another_msg = 9;
+  repeated AnotherMessage another_msg2 = 10;
+}
+
