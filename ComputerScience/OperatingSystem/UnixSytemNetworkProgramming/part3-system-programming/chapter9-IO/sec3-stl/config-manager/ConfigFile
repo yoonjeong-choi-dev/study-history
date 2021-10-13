@@ -1,0 +1,8 @@
+# << 전체 시스템을 위한 Config File >>
+# 해당 설정 파일은 (key: string, value: string) 형식
+TEMS_IP_ADDREESS=192.168.100.100
+TEMS_MASSAGE_QUEUE_KEY=7777
+
+# Trace를 위한 세팅. 테스트 용
+TRACE=ON
+LOG_LEVEL=1
