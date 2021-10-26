@@ -1,0 +1,31 @@
+type User {
+    userId: ID!
+    name: String
+}
+
+
+# Define some schedule type
+type StudyGroup {
+    name: String!
+    subject: String
+    students: [User!]!
+}
+
+type WorkOut {
+    name: String!
+    reps: Int!
+}
+
+type Meal {
+    name: String!
+    mainDish: String!
+    participants: [User!]!
+}
+
+# Define Schedule Unit with Union
+union AgendaItem = StudyGroup | WorkOut | Meal
+
+# Add agenda into schema field 
+type Query {
+    agenda: [AgendaItem!]!
+}

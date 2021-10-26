@@ -1,0 +1,42 @@
+scalar DateTime
+
+type User {
+    userId: ID!
+    name: String
+}
+
+# Define interface for schedule
+interface AgendaItem {
+    name: String!
+    start: DateTime!
+    end: DateTime!
+}
+
+# Define some schedule type with AgendaItem interface
+type StudyGroup implements AgendaItem {
+    name: String!
+    start: DateTime!
+    end: DateTime!
+    subject: String
+    students: [User!]!
+}
+
+type WorkOut {
+    name: String!
+    start: DateTime!
+    end: DateTime!
+    reps: Int!
+}
+
+type Meal {
+    name: String!
+    start: DateTime!
+    end: DateTime!
+    mainDish: String!
+    participants: [User!]!
+}
+
+# Add agenda into schema field 
+type Query {
+    agenda: [AgendaItem!]!
+}
