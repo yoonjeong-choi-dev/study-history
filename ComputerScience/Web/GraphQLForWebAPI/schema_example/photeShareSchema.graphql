@@ -1,0 +1,170 @@
+# Schema for Photo Share App
+
+# Custom Scalar Type
+scalar DateTime
+
+
+##########################################################
+# Custom Types
+##########################################################
+
+# << Connection between User and Photo >>
+# postedPhotos, postedBy : Make an edge between User and Photo bidirectional 
+# User <-- "inPhotos", "taggedUsers" --> Photo : N:M connection
+
+type User {
+    githubLogin: ID!                # User for this app has to login via GitHub
+    name: String
+    avartar: String
+    postedPhotos(
+        filter: PhotoFilter
+        paging: DataPage
+        sorting: DataSort
+    ): [Photo!]!                    # User -- "postedPhotos" --> Photo : 1:N connection
+    inPhotos(
+        filter: PhotoFilter
+        paging: DataPage
+        sorting: DataSort
+    ): [Photo!]!                    # User -- "inPhotos" --> Photo : 1:N connection
+}
+
+
+type Photo {
+    id: ID!
+    name: String!
+    url: String!
+    description: String
+    created: DateTime!
+    category: PhotoCategory!
+    postedBy: User!                 # Photo -- "postedBy" --> User : 1:1 connection
+    taggedUsers(
+        filter: PhotoFilter
+        paging: DataPage
+        sorting: DataSort
+    ): [User!]!           # Photo -- "taggedUsers" --> User : 1:N connection
+}
+
+
+# type for OAuth of Github : includes OAuth token
+type AuthPayload {
+    token: String!
+    user: User!
+}
+
+
+
+##########################################################
+# Enumertation Type
+##########################################################
+
+# enumeration type for Photo type
+enum PhotoCategory {
+    SELFIE
+    PORTRAIT
+    ACTION
+    LANDSCAPE
+    GRAPHIC
+}
+
+# enumertaion type for sorting photo
+enum SortDirection {
+    ASCENDING
+    DESCENDING
+}
+
+enum SortablePhotoField {
+    name
+    description
+    category
+    created
+}
+
+
+
+##########################################################
+# Input Types
+##########################################################
+
+# Define Input types for data filtering and paging
+input PhotoFilter {
+    category: PhotoCategory
+    createdBetween: DateRange
+    taggedUsers: [ID!]
+    searchText: String
+}
+
+input DateRange {
+    start: DateTime!
+    end: DateTime!
+}
+
+input DataPage {
+    first: Int = 25
+    start: Int = 0
+}
+
+input DataSort {
+    sort: SortDirection = DESCENDING
+    sortBy: SortablePhotoField = created
+}
+
+# Define Input types for Mutation Input
+input PostPhotoInput {
+    name: String!
+    description: String
+    category: PhotoCategory = PORTRAIT
+}
+
+
+
+##########################################################
+# Root Type : client request of GraphQL API
+##########################################################
+
+# Query Root Type : Define 'query' result for GraphQL API
+type Query {
+    totalPhotos: Int!
+    allPhotos: [Photo!]!
+    totalUsers: Int!
+    allUsers: [User!]!
+
+    # Define query params for 'Data Filtering'
+    Photo(id: ID!) : Photo
+    User(id: ID!): User
+
+    # Define query params for 'Data Paging'
+    allUsers(paging: DataPage, sorting: DataSort): [User!]!
+    allPhotos(filter: PhotoFilter paging: DataPage, sorting: DataSort): [Photo!]!
+
+    # Define query params for sort
+    allPhotos(
+        sort: SortDirection = DESCENDING
+        sortBy: SortablePhotoField = created
+    ): [Photo!]!
+}
+
+
+# Mutation Root Type : Define User Action for GraphQL app
+type Mutation {
+    postPhoto(input: PostPhotoInput!): Photo!
+    githubAuth(code: String!): AuthPayload!
+}
+
+# Subscription Root Type : Define for PubSub Pattern
+type Subscription {
+    newPhoto(category: PhotoCategory): Photo!
+    newUser: User!
+}
+
+
+##########################################################
+# schema
+##########################################################
+schema {
+    # Add Query into schema field to make using 'query' from API possible
+    query: Query
+    # Add Mutation into schema field to make using 'mutation' from API possible
+    mutation: Mutation
+    # Add Subscription into schema field to use PubSub Pattern
+    subscription: Subscription
+}
