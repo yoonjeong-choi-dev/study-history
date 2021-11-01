@@ -1,0 +1,63 @@
+# Define custom scalar type
+scalar DateTime
+
+# Define Photo types
+enum PhotoCategory {
+    SELFIE
+    PORTRAIT
+    ACTION
+    LANDSCAPE
+    GRAPHIC
+}    
+
+# Define Photo 
+type Photo {
+    id: ID!
+    url: String!
+    name: String!
+    description: String
+    category: PhotoCategory!
+    postedBy: User!
+    taggedUsers: [User!]!
+    created: DateTime!
+}
+
+# Define User
+type User {
+    githubLogin: ID!
+    name: String
+    avatar: String
+    postedPhotos: [Photo!]!
+    inPhotos: [Photo!]!
+}
+
+# Define Github Auth Token : only used to response mutation of auth
+type AuthPayload {
+    token: String!
+    user: User!
+}
+
+
+input PostPhotoInput {
+    name: String!
+    category: PhotoCategory=PORTRAIT
+    description: String
+}
+
+type Query {
+    me: User
+    totalPhotos: Int!
+    allPhotos: [Photo!]!
+    Photo(id: ID!): Photo
+    totalUsers: Int!
+    allUsers: [User!]!
+}
+
+type Mutation {
+   postPhoto(input: PostPhotoInput!): Photo!
+   githubAuth(code: String!): AuthPayload!
+
+   # for test
+   addFakeUsers(count: Int=1): [User!]!
+   fakeUserAuth(githubLogin: ID!): AuthPayload!
+}
