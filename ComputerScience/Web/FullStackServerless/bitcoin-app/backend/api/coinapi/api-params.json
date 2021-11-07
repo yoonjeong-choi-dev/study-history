@@ -1,0 +1,44 @@
+{
+    "paths": [
+        {
+            "name": "/coins",
+            "lambdaFunction": "bitcoinFunction",
+            "privacy": {
+                "open": true
+            },
+            "policyResourceName": "/coins"
+        },
+        {
+            "name": "/coins",
+            "lambdaFunction": "bitcoinFunction",
+            "privacy": {
+                "open": true
+            },
+            "policyResourceName": "/coins"
+        }
+    ],
+    "resourceName": "coinapi",
+    "apiName": "coinapi",
+    "functionArns": [
+        {
+            "lambdaFunction": "bitcoinFunction"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "amplify-amplifyreactapp-dev-234639-authRole",
+        "unAuthRoleName": "amplify-amplifyreactapp-dev-234639-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "bitcoinFunction",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ],
+    "uuid": "6097f4a8"
+}

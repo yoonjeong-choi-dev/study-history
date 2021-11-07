@@ -1,0 +1,69 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-amplifyreactapp-dev-234639-authRole",
+      "UnauthRoleArn": "arn:aws:iam::085771716532:role/amplify-amplifyreactapp-dev-234639-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::085771716532:role/amplify-amplifyreactapp-dev-234639-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-amplifyreactapp-dev-234639-deployment",
+      "UnauthRoleName": "amplify-amplifyreactapp-dev-234639-unauthRole",
+      "StackName": "amplify-amplifyreactapp-dev-234639",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:085771716532:stack/amplify-amplifyreactapp-dev-234639/86115a20-3fd9-11ec-b90f-063ffc34a318",
+      "AmplifyAppId": "dq74xa8588o8"
+    }
+  },
+  "function": {
+    "bitcoinFunction": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2021-11-07T15:47:17.296Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2021-11-07T15:47:17.766Z",
+      "distZipFilename": "bitcoinFunction-78487334552f4d624958-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-amplifyreactapp-dev-234639-deployment",
+        "s3Key": "amplify-builds/bitcoinFunction-78487334552f4d624958-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-amplifyreactapp-dev-234639-deployment/amplify-cfn-templates/function/bitcoinFunction-cloudformation-template.json",
+        "logicalId": "functionbitcoinFunction"
+      },
+      "lastPushTimeStamp": "2021-11-07T15:48:20.619Z",
+      "output": {
+        "Region": "ap-northeast-2",
+        "Arn": "arn:aws:lambda:ap-northeast-2:085771716532:function:bitcoinFunction-dev",
+        "Name": "bitcoinFunction-dev",
+        "LambdaExecutionRole": "amplifyreactappLambdaRole78c8065a-dev"
+      },
+      "lastPushDirHash": "VaZEdtxLAeoI4ryIKdd9WWundmg="
+    }
+  },
+  "api": {
+    "coinapi": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "bitcoinFunction",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ],
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-amplifyreactapp-dev-234639-deployment/amplify-cfn-templates/api/coinapi-cloudformation-template.json",
+        "logicalId": "apicoinapi"
+      },
+      "lastPushTimeStamp": "2021-11-07T15:48:20.609Z",
+      "output": {
+        "ApiName": "coinapi",
+        "RootUrl": "https://y7bpwl3y51.execute-api.ap-northeast-2.amazonaws.com/dev",
+        "ApiId": "y7bpwl3y51"
+      },
+      "lastPushDirHash": "bRtG0ESi2nb64l81+Xb4gEPe2yU="
+    }
+  }
+}
