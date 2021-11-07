@@ -5,3 +5,5 @@
 
 # 파일 정보
 - API Server와 Client 각각 구현
+- Server
+  - 파일 스트림 createReadStream을 사용하기 위해서 node 버전을 12로 낮춰서 사용해야 함
