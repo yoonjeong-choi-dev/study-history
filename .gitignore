@@ -12,6 +12,8 @@ node_modules/
 node_modules
 package-lock.json
 .env
+.env.development
+.env.production
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
