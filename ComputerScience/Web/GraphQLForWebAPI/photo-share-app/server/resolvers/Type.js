@@ -6,7 +6,7 @@ module.exports = {
         // 직전에 생성된 사진의 경우, id 필드가 없고, _id필드만 존재
         id: parent => parent.id || parent._id,
 
-        url: parent => `/img/photos/${parent._id}.jpg`,
+        url: parent => `/img/photos/${parent._id}`,
 
         postedBy: (parent, args, { db }) => {
             return db.collection("users")

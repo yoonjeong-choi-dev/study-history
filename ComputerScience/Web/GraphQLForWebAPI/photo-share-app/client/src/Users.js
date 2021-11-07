@@ -74,7 +74,7 @@ const updateUserCache = ( cache, { data:{ addFakeUsers } }) => {
         ...data.allUsers,
         ...addFakeUsers
     ]
-    console.log(data);
+
     cache.writeQuery({ query: ROOT_QUERY, data })
 }    
 

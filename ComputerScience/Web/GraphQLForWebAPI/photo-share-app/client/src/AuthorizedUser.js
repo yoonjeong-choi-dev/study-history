@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, NavLink } from 'react-router-dom';
 import { Query, Mutation, withApollo, compose } from 'react-apollo';
 import { ROOT_QUERY } from './App';
 import { gql } from 'apollo-boost';
@@ -44,6 +44,7 @@ const CurrentUser = ({ name, avatar, githubLogin, logout }) => {
         <div style= {currentUserStyle}>
             <h2>[ Current Users ]</h2>
             <button onClick={logout}>로그아웃</button>
+            <NavLink to="/newPhoto">Post Photo</NavLink>
             <p>Name : {name}</p>
             <p>Github: {githubLogin} </p>
             <span>Avatar : </span><img src={avatar} width={48} height={48} alt="" />
@@ -116,4 +117,4 @@ class AuthorizedUser extends Component {
     }
 }
 
-export default compose(withApollo, withRouter)(AuthorizedUser)   ;
+export default compose(withApollo, withRouter)(AuthorizedUser);

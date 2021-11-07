@@ -45,8 +45,8 @@ const authorizeWithGithub = async (credentials) => {
     return { ...githubUser, access_token };
 }
 
-const saveFile = (stream, path) => 
-    new Promise((resolve, reject) => {
+const uploadStream = (stream, path) => 
+    new Promise( (resolve, reject) => {
         stream.on('error', error => {
             if (stream.truncated) {
                 fs.unlinkSync(path)
@@ -58,7 +58,7 @@ const saveFile = (stream, path) =>
 
 const uploadFile = async (file, path) => {
     const { stream } = await file
-    return saveFile(stream, path)
+    return uploadStream(stream, path)
 }
 
-module.exports = {findBy, authorizeWithGithub, uploadFile}
+module.exports = {findBy, authorizeWithGithub, uploadStream, uploadFile}

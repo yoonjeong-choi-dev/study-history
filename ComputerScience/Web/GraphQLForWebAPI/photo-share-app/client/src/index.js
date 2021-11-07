@@ -2,8 +2,17 @@ import React from "react";
 import { render } from "react-dom";
 import App from "./App";
 import { ApolloProvider } from "react-apollo";
-import ApolloClient, { gql, InMemoryCache } from "apollo-boost";
+import { 
+    InMemoryCache, 
+    ApolloLink,
+    ApolloClient,
+    split,
+    gql
+} from "apollo-boost";
 import { persistCache } from "apollo-cache-persist";
+import { WebSocketLink } from "apollo-link-ws";
+import { getMainDefinition } from "apollo-utilities";
+import { createUploadLink } from "apollo-upload-client";
 
 // 클라이언트 캐시 설정
 // 로컬 스토리지에 캐시 저장
@@ -18,22 +27,46 @@ if(localStorage["apollo-cache-persist"]) {
     console.log("Apollo Cache Restore...");
 
     let cacheData = JSON.parse(localStorage["apollo-cache-persist"]);
-    cache.resotre(cacheData);
+    cache.restore(cacheData);
 }
 
+// HTTP 요청을 위한 링크 : multipart/form-data 지원
+const httpLink = createUploadLink({ uri: "http://localhost:4000/graphql" });
 
-// create Apollo client with the server api
-// 요청마다 로컬 스토리지에 저장해둔 토큰을 헤더에 포함시킨다
-const client = new ApolloClient({
-    uri: "http://localhost:4000/graphql",
-    request: operation => {
-        operation.setContext(context => ({
-            headers: {
-                ...context.headers,
-                authorization: localStorage.getItem('token')
-            }
-        }))
-    }
+// 웹소켓을 위한 링크
+const wsLink = new WebSocketLink({
+    uri: "ws://localhost:4000/subscriptions",
+    options: { reconnect: true}
+});
+
+
+// 요청마다 로컬 스토리지에 저장해둔 토큰을 헤더에 포함시켜 포워딩하는 링크
+const authLink = new ApolloLink((operation, forward) => {
+    operation.setContext(context => ({
+        headers: {
+            ...context.headers,
+            authorization: localStorage.getItem("token")
+        }
+    }))
+    return forward(operation)
+})
+const httpAuthLink = authLink.concat(httpLink);
+
+
+// 요청이 서브스크립션이면 wsLink로, 다른 요청이면 httpAuthLink로 보내는 링크
+const link = split(
+    ({ query }) => {
+        const { kind, operation } = getMainDefinition(query);
+        return kind === "OperationDefinition" && operation === "subscription";
+    }, 
+    wsLink,
+    httpAuthLink
+)
+
+// 링크와 캐시를 이용하여 아폴로 클라이언트 객체 생성
+const client = new ApolloClient ({
+    cache,
+    link
 });
 
 // sample query and reqeust
@@ -60,5 +93,5 @@ render(
     <ApolloProvider client={client}>
         <App />
     </ApolloProvider>,
-    document.getElementById('root')
+    document.getElementById("root")
 )

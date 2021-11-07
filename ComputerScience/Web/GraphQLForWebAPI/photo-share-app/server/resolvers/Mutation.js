@@ -1,28 +1,53 @@
-const { authorizeWithGithub } = require("../utils");
-const fetch = require("node-fetch")
-const { ObjectID, Db } = require("mongodb");
-
+const { authorizeWithGithub, uploadStream } = require("../utils");
+const fetch = require("node-fetch");
+const { ObjectID } = require("mongodb");
+const path = require('path');
+const { create } = require("domain");
 
 module.exports = {
-    postPhoto: async (parent, args, { db, currentUser }) => {
+    postPhoto: async (parent, args, { db, currentUser, pubsub }) => {
         // check the user is login via currentUser
         if (!currentUser) {
             throw new Error("Only an authorized user can post a photo");
         }
-
+        
+        const input = args.input
         var newPhoto = {
-            ...args.input,
+            name: input.name,
+            category: input.category,
+            description: input.description,
             userID: currentUser.githubLogin,
             created: new Date()
         };
     
-        const { insertedIds } = await db.collection("photos").insertOne(newPhoto);
-        newPhoto.id = insertedIds;
+        const { insertedId } = await db.collection("photos").insertOne(newPhoto);
+        newPhoto.id = insertedId;
+
+
+        // file인자에 있는 스트림을 이용하여, toPath 로컬 디렉터리에 사진 저장
+        const toPath = path.join(__dirname, "..", "assets", "photos", `${newPhoto._id}`);
+        const { createReadStream } = await input.file;
+        const stream = createReadStream();
+        await uploadStream(stream, toPath);
+
+        // 사진 추가에 대한 pubsub event 발생 
+        // : 이벤트와 데이터를 서브스크립션 리졸버로 전송
+        pubsub.publish("photo-added", { newPhoto : newPhoto });
         
         return newPhoto;
     },
 
-    githubAuth: async (parent, { code }, { db }) => {
+    tagPhoto: async (parent, args, { db }) => {
+
+        await db.collection('tags')
+          .replaceOne(args, args, { upsert: true })
+        
+        return db.collection('photos')
+          .findOne({ _id: ObjectID(args.photoID) }) 
+    
+    },
+
+    githubAuth: async (parent, { code }, { db, pubsub }) => {
         // Get user data from Github
         let {
             message,
@@ -55,12 +80,15 @@ module.exports = {
                         .findOneAndReplace({ githubLogin: login }, userInfo, { upsert: true });
         
         // created
+        var user = null
         if (!updateResult["value"]) {
             const _id = updateResult["lastErrorObject"]["upserted"];
-            const user = await db.collection('users').findOne({ "_id": _id });
+            user = await db.collection('users').findOne({ "_id": _id });
         }
-        const user = updateResult["value"];
-        
+        else {
+            user = updateResult["value"];
+        }
+        pubsub.publish('user-added', { newUser: user })
         return {user: user, token: access_token};
     },
 
