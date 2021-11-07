@@ -1,6 +1,6 @@
 const { authorizeWithGithub } = require("../utils");
 const fetch = require("node-fetch")
-const { ObjectID } = require("mongodb");
+const { ObjectID, Db } = require("mongodb");
 
 
 module.exports = {
@@ -45,13 +45,20 @@ module.exports = {
             name,
             githubLogin: login,
             githubToken: access_token,
-            avatar: avatar_url
+            avatar: avatar_url,
+            type: "REAL"
         };
 
         // Update DB
         const updateResult
             = await db.collection("users")
-                        .findOneAndReplace({ githubLogin: login }, userInfo, { upsert: true});
+                        .findOneAndReplace({ githubLogin: login }, userInfo, { upsert: true });
+        
+        // created
+        if (!updateResult["value"]) {
+            const _id = updateResult["lastErrorObject"]["upserted"];
+            const user = await db.collection('users').findOne({ "_id": _id });
+        }
         const user = updateResult["value"];
         
         return {user: user, token: access_token};
@@ -66,7 +73,8 @@ module.exports = {
             githubLogin: user.login.username,
             name: `${user.name.first} ${user.name.last}`,
             avatar: user.picture.thumbnail,
-            githubToken: user.login.sha1
+            githubToken: user.login.sha1,
+            type: "FAKE"
         }))
 
         // 유저 DB 등록
@@ -87,4 +95,19 @@ module.exports = {
             user
         }
     },
+
+    deleteAllFakeUsers: async (parent, args, { db }) => {
+        const fakeQuery = { "type": "FAKE"};
+        const users = await db.collection("users").find(fakeQuery).toArray();
+        
+        const githubLogins = users.map( user => user.githubLogin );
+
+        // 태그 기능은 없으므로, fake 사용자 및 해당 사용자가 포스트한 사진들만 삭제
+        const deleteUsers = await db.collection("users").deleteMany(fakeQuery);
+        const deletePhotos = await db.collection("photos").deleteMany({
+            "userID": { $in: githubLogins }
+        })
+        
+        return `${deleteUsers.deletedCount} fake-users are deleted and ${deletePhotos.deletedCount} photos are deleted`
+    }
 }

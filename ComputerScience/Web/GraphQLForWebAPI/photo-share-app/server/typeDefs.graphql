@@ -22,6 +22,12 @@ type Photo {
     created: DateTime!
 }
 
+# Define User types
+enum UserType {
+    REAL
+    FAKE
+}
+
 # Define User
 type User {
     githubLogin: ID!
@@ -29,6 +35,7 @@ type User {
     avatar: String
     postedPhotos: [Photo!]!
     inPhotos: [Photo!]!
+    type: UserType!
 }
 
 # Define Github Auth Token : only used to response mutation of auth
@@ -60,4 +67,5 @@ type Mutation {
    # for test
    addFakeUsers(count: Int=1): [User!]!
    fakeUserAuth(githubLogin: ID!): AuthPayload!
+   deleteAllFakeUsers: String!
 }
