@@ -4,26 +4,11 @@
 - 비로그인 시, 로그인 양식으로 리다이렉트
 */
 
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Auth } from "aws-amplify";
+import React from "react";
 import Container from "./Container";
+import protectedRoute from "./protectedRoute";
 
 const Protected = () => {
-    const navigate = useNavigate();
-    const checkLogin = async () => {
-        // API 호출을 이용한 로그인 여부 확인
-        // 에러 발생 <=> 비로그인 상태
-        await Auth.currentAuthenticatedUser().catch(() => {
-            navigate("/profile");
-        });
-    };
-
-    // 마운트 시, 로그인 여부 확인 : 비로그인 시 로그인 페이지로 리다이렉트
-    useEffect(() => {
-        checkLogin();
-    }, []);
-
     return (
         <Container>
             <h1>Protected Route</h1>
@@ -32,4 +17,4 @@ const Protected = () => {
     );
 };
 
-export default Protected;
+export default protectedRoute(Protected);

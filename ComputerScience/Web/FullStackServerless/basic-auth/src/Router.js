@@ -43,13 +43,13 @@ const Router = () => {
         setRoute();
 
         // 해시 변경 시 경로 상태 변경 이벤트 리스너 등록
-        window.addEventListener("hashchange", (e)=>{
-          setRoute();
-        }, false);
+        window.addEventListener("onhashchange",setRoute);
 
         // 마운트 해제 시, 이벤트 구독 해제
         return () => window.removeEventListener("hashchange", setRoute);
     }, []);
+
+    
 
     return (
         <HashRouter>

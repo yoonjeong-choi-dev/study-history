@@ -8,7 +8,7 @@ import { HomeOutlined, ProfileOutlined, FileProtectOutlined } from "@ant-design/
 const Nav = (props) => {
     // 현재 경로 이름 : Router에서 전달
     const { current } = props;
-    
+
     return (
         <div>
             <Menu selectedKeys={[current]} mode="horizontal">
