@@ -1,0 +1,27 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-festivalapp-dev-203639-authRole",
+      "UnauthRoleArn": "arn:aws:iam::085771716532:role/amplify-festivalapp-dev-203639-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::085771716532:role/amplify-festivalapp-dev-203639-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-festivalapp-dev-203639-deployment",
+      "UnauthRoleName": "amplify-festivalapp-dev-203639-unauthRole",
+      "StackName": "amplify-festivalapp-dev-203639",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:085771716532:stack/amplify-festivalapp-dev-203639/a32a0b20-479a-11ec-aa07-0684fb143866",
+      "AmplifyAppId": "d5h04kadvipgg"
+    },
+    "categories": {
+      "function": {
+        "festivalappc284946dPostConfirmation": {
+          "GROUP": "Admin",
+          "deploymentBucketName": "amplify-festivalapp-dev-203639-deployment",
+          "s3Key": "amplify-builds/festivalappc284946dPostConfirmation-4f725a6a746148654249-build.zip"
+        }
+      },
+      "auth": {
+        "festivalappc284946d": {}
+      }
+    }
+  }
+}
