@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "photoshareAPI",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authphotoshareappd1e6c044",
+      "Outputs.UserPoolId"
+    ]
+  }
+}
