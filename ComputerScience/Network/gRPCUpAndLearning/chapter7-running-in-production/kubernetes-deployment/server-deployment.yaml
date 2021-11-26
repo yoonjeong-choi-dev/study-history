@@ -1,0 +1,41 @@
+# 디플로이먼트 정의
+apiVersion: apps/v1
+kind: Deployment  # 쿠버네티스 객체 선언
+metadata:
+  name: grpc-server # 디플로이먼트 이름
+spec:
+  replicas: 1     # 파드 개수
+  selector:
+    matchLabels:
+      app: grpc-server
+  template:
+    metadata:
+      labels:
+        app: grpc-server
+    spec:
+      # 도커 이미지 및 컨테이너 설정
+      containers:
+      - name: grpc-server
+        image: yjchoi7166/grpc-server:v0.1
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 50051
+          name: grpc
+
+---
+# 서비스 정의
+apiVersion: v1
+kind: Service
+metadata:
+  name: stage   # 서비스 이름 : 클라이언트가 접근하는 주소 이름(현재는 stage)
+spec:
+  selector:
+    app: grpc-server  # 파드 레이블
+  ports:
+  - port: 50051         # 서비스 포트
+    targetPort: 50051   # 요청을 전달하는 목적지 파드 레이블과 일치하는 파드 포트
+    name: grpc
+  type: NodePort
