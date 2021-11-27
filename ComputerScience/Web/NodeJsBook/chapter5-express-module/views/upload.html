@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1>Hello~ {{name}}</h1>
+<p>You can upload your image</p>
+<form action='/upload' method='post' enctype="multipart/form-data">
+    <input type='file' name='image'/>
+    <input type='text' name='title'/>
+    <button type='submit'>Upload</button>
+</form>
+{% endblock %}
+        
