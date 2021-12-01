@@ -1,0 +1,1 @@
+select current_date(), current_time(), current_timestamp();

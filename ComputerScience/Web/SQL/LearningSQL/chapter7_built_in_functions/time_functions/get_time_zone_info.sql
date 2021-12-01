@@ -1,0 +1,1 @@
+select @@global.time_zone db_global_time, @@session.time_zone session_time;

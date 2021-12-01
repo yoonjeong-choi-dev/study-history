@@ -1,0 +1,1 @@
+select substring('goodbye cruel world', 9, 5);

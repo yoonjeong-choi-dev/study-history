@@ -1,0 +1,1 @@
+select first_name, last_name from cust_vw where active =1;

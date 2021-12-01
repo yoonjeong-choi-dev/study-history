@@ -1,0 +1,1 @@
+select extract(year from current_timestamp()), extract(day from current_timestamp());
