@@ -1,0 +1,1 @@
+show index from customer \G;
