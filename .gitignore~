@@ -1,6 +1,20 @@
+### My Test ###
+playground/
+test
+.gitingore~
+
 ### IDE ###
 .vscode/
 .idea/
+
+### node ###
+node_modules/
+node_modules
+package-lock.json
+.env
+.env.development
+.env.production
+photos/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

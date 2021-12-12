@@ -16,6 +16,10 @@ package-lock.json
 .env.production
 photos/
 
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
