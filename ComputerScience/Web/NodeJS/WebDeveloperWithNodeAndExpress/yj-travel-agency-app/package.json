@@ -1,11 +1,12 @@
 {
   "name": "yj-travel-agency-app",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Travel Agency App",
   "main": "index.js",
   "scripts": {
-    "dev" : "nodemon index",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index",
+    "test": "jest",
+    "lint": "eslint index.js lib"
   },
   "keywords": [
     "nodejs"
@@ -17,6 +18,12 @@
     "express-handlebars": "^3.1.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "eslint": "^8.4.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.3",
+    "jest": "^25.5.4",
+    "nodemon": "^2.0.15",
+    "portfinder": "^1.0.28",
+    "puppeteer": "^1.20.0"
   }
 }
