@@ -1,0 +1,15 @@
+{
+  "name": "simple-cli",
+  "version": "0.1.0",
+  "description": "simple cli example",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yoonjeong Choi",
+  "license": "MIT",
+  "bin": {
+    "simple-cli": "./index.js"
+  },
+  "dependencies": {}
+}

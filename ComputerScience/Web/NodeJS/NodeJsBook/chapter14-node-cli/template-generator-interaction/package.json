@@ -1,0 +1,15 @@
+{
+  "name": "template-generator-interaction",
+  "version": "0.1.0",
+  "description": "template generator with user interaction",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yoonjeong Choi",
+  "license": "MIT",
+  "bin": {
+    "template-generator-interaction": "./index.js"
+  },
+  "dependencies": {}
+}

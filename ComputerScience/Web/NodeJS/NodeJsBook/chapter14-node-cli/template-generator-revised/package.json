@@ -1,0 +1,19 @@
+{
+  "name": "template-generator-revised",
+  "version": "0.1.0",
+  "description": "template generator with commander",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yoonjeong Choi",
+  "license": "MIT",
+  "bin": {
+    "template-generator": "./index.js"
+  },
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "commander": "^5.1.0",
+    "inquirer": "^7.1.0"
+  }
+}

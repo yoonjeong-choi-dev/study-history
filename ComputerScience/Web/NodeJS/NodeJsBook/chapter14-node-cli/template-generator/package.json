@@ -1,0 +1,15 @@
+{
+  "name": "template-generator",
+  "version": "0.1.0",
+  "description": "template generator with cli",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yoonjeong Choi",
+  "license": "MIT",
+  "bin": {
+    "template-generator": "./index.js"
+  },
+  "dependencies": {}
+}
