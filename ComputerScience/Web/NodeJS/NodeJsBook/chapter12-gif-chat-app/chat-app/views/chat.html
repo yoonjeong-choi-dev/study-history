@@ -1,0 +1,183 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1>{{title}}</h1>
+<a href="/" id="exit-btn">방 나가기</a>
+<fieldset>
+  <legend>채팅 내용</legend>
+  <div id="personal-chat">
+
+  </div>
+  <div id="chat-list">
+    {% for chat in chats %}
+    {% if chat.user === user %}
+    <div class="mine" style="color: {{chat.user}}">
+      <div>{{chat.user}}</div>
+      {% if chat.gif %}}
+      <img src="/gif/{{chat.gif}}">
+      {% else %}
+      <div>{{chat.chat}}</div>
+      {% endif %}
+    </div>
+    {% elif chat.user === 'system' %}
+    <div class="system">
+      <div>{{chat.chat}}</div>
+    </div>
+    {% else %}
+    <div class="other" style="color: {{chat.user}}">
+      <div>{{chat.user}}
+        <button class="personal" data-user="{{chat.user}}">귓속말</button>
+      </div>
+      {% if chat.gif %}
+      <img src="/gif/{{chat.gif}}">
+      {% else %}
+      <div>{{chat.chat}}</div>
+      {% endif %}
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+</fieldset>
+<form action="/chat" id="chat-form" method="post" enctype="multipart/form-data">
+  <label for="gif">GIF 올리기</label>
+  <input type="file" id="gif" name="gif" accept="image/gif">
+  <input type="text" id="chat" name="chat">
+  <button type="submit">전송</button>
+</form>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  // chat 네임스페이스에 대한 소켓 객체 생성
+  const socket = io.connect('http://localhost:8081/chat', {
+    path: '/socket.io',
+  });
+
+  window.onLoad = () => {
+    window.socket = socket;
+  }
+
+  // 방참가 이벤트 
+  socket.on('join', function (data) {
+    const div = document.createElement('div');
+    div.classList.add('system');
+    const chat = document.createElement('div');
+    div.textContent = data.chat;
+    div.appendChild(chat);
+    document.querySelector('#chat-list').appendChild(div);
+
+    console.log(data);
+    console.log(socket);
+  });
+
+  // 방퇴장 이벤트
+  socket.on('exit', function (data) {
+    const div = document.createElement('div');
+    div.classList.add('system');
+    const chat = document.createElement('div');
+    div.textContent = data.chat;
+    div.appendChild(chat);
+    document.querySelector('#chat-list').appendChild(div);
+  });
+
+  
+  // 귓속말 버튼 이벤트 리스너
+  const personalButtonClick = (e) => {
+    const message = prompt('보낼 메시지를 입력하세요');
+      if (!message) {
+        return;
+      }
+
+      const userId = e.target.dataset.user;
+      alert(userId);
+  }
+
+  // 채팅 생성 이벤트
+  socket.on('chat', function (data) {
+    const div = document.createElement('div');
+    let isMine = false;
+    if (data.user === '{{user}}') {
+      div.classList.add('mine');
+      isMine = true;
+    } else {
+      div.classList.add('other');
+    }
+    const name = document.createElement('div');
+    name.textContent = data.user;
+
+    if (!isMine) {
+      const button = document.createElement('button');
+      button.innerHTML = '귓속말'
+      button.dataset.user = data.user;
+      button.addEventListener('click', personalButtonClick);
+      name.appendChild(button);
+    }
+
+    div.appendChild(name);
+    if (data.chat) {
+      const chat = document.createElement('div');
+      chat.textContent = data.chat;
+      div.appendChild(chat);
+    } else {
+      const gif = document.createElement('img');
+      gif.src = '/gif/' + data.gif;
+      div.appendChild(gif);
+    }
+    div.style.color = data.user;
+    document.querySelector('#chat-list').appendChild(div);
+  });
+
+  // 채팅 폼입력 이벤트 리스터
+  document.querySelector('#chat-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (e.target.chat.value) {
+      axios.post(`/room/{{room._id}}/chat`, {
+        chat: this.chat.value,
+      })
+        .then(() => {
+          e.target.chat.value = '';
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  });
+
+  // gif는 클라이언트에서 업로드시 바로 저장
+  document.querySelector('#gif').addEventListener('change', function (e) {
+    console.log(e.target.files);
+    const formData = new FormData();
+    formData.append('gif', e.target.files[0]);
+    axios.post('/room/{{room._id}}/gif', formData)
+      .then(() => {
+        e.target.file = null;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  });
+
+
+  
+
+  document.querySelectorAll('.personal').forEach(function (button) {
+    button.addEventListener('click', personalButtonClick)
+  });
+
+  // 귓속말 이벤트
+  socket.on('personal', function (data) {
+    const div = document.createElement('div');
+    div.classList.add('other');
+
+    const name = document.createElement('div');
+    name.textContent = data.user;
+    div.appendChild(name);
+
+    const chat = document.createElement('div');
+    chat.textContent = data.chat;
+    div.appendChild(chat);
+
+    div.style.color = data.user;
+    document.querySelector('#personal-chat').appendChild(div);
+  });
+</script>
+{% endblock %}

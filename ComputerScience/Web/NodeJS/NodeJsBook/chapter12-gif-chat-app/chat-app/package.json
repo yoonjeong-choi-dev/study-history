@@ -1,0 +1,30 @@
+{
+  "name": "gif-chat-app",
+  "version": "0.1.0",
+  "description": "Chatting App with Web Socket",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index"
+  },
+  "author": "Yoonjeong Choi",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "color-hash": "^2.0.1",
+    "cookie-parser": "^1.4.6",
+    "cookie-signature": "^1.1.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "express-session": "^1.17.2",
+    "mongoose": "^6.1.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.4",
+    "nunjucks": "^3.2.3",
+    "socket.io": "^2.4.1",
+    "ws": "^8.3.0"
+  }
+}

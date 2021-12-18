@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Simple WS</title>
+</head>
+
+<body>
+  <div>F12를 눌러 console 탭과 network 탭을 확인하세요.</div>
+  <script>
+    const websocket = new WebSocket('ws://localhost:8081');
+    websocket.onopen = () => {
+      console.log('Success to connect WebSocket with Server');
+    };
+    websocket.onmessage = (e) => {
+      console.log(e.data);
+      websocket.send('Message from Client!')
+    }
+  </script>
+</body>
+
+</html>
