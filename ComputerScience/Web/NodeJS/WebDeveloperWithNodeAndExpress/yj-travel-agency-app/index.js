@@ -2,6 +2,14 @@ const express = require('express');
 const expressHandlebars = require('express-handlebars');
 const path = require('path');
 const multiparty = require('multiparty');
+const cookieParser = require('cookie-parser');
+const expressSession = require('express-session');
+
+const dotenv = require('dotenv');
+dotenv.config();
+
+// 커스텀 미들웨어
+const flashMiddleware = require('./lib/middleware/flash');
 
 const app = express();
 const port = process.env.PORT || 7166;
@@ -20,6 +28,20 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// 쿠키 및 세션 쿠키 미들웨어 설정
+app.use(cookieParser(process.env.YJ_COOKIE_SECRET));
+app.use(expressSession({
+    // 요청이 수정되지 않았을 때 강제 저장 여부 : 일반적으로 false 권장
+    resave: false,
+    // 초기화 되지 않은 새로운 세션 강제 저장 여부 : 일반적으로 false 권장
+    saveUninitialized: false,
+    // 세션 ID 쿠키 서명에 사용하는 비밀키
+    secret: process.env.YJ_COOKIE_SECRET
+}));
+
+// 커스텀 미들웨어
+app.use(flashMiddleware);
+
 // 라우팅 핸들러 import 및 라우팅 정의
 const handler = require('./lib/handlers');
 
@@ -31,6 +53,7 @@ app.get('/about', handler.about);
 app.get('/newsletter-signup', handler.newletterSignup);
 app.post('/newsletter-signup/process', handler.newletterSignupProcess);
 app.get('/newsletter-signup/thank-you', handler.newletterSignupThankYou);
+app.get('/newsletter/archive', handler.newletterSignupResult);
 
 app.get('/newsletter', handler.newsletter);
 app.post('/api/newsletter-signup', handler.api.newsletterSignup);
@@ -71,7 +94,8 @@ app.post('/api/vacation-photo-contest/:year/:month', (req, res) => {
 });
 
 
-// legacy
+// cookie test
+app.get('/cookie-test', handler.cookieTest);
 
 
 
