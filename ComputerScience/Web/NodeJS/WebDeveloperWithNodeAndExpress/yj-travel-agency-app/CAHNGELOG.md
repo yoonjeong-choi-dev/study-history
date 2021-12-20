@@ -2,6 +2,26 @@
 
 각 챕터 별, 추가/변경 사항 작성
 
+### [0.4.0]
+
+> Chapter 8. Handle Form Data
+
+- 일반적인 폼 처리를 위해 전송된 인코드된 바디를 분석하는 미들웨어인 body-parser 설정
+  - `req.body`를 통해 클라이언트에서 전송된 body 데이터 사용 가능
+  - express4부터 express에 body-parser가 내장되어 있음
+- 파일 전송 위한 멀티파트 폼 처리를 하는 multiparty 미들 웨어 설치
+- CSS 스타일을 부트스트랩 스타일로 적용
+  - https://getbootstrap.com/docs/4.1/getting-started/introduction/
+  - 디폴트 레이아웃 파일인 `defaultLayout.handlebars`에 css 동적 추가
+- 두 가지 방식의 폼처리 방식을 위한 뷰 파일 추가
+  - 폼 처리 방법
+    - 방법 1 : 브라우저의 폼 액션을 사용하여 서버 응답을 렌더링
+    - 방법 2 : 브라우저 폼 액션 대신 fetch(AJAX)를 사용하여 폼 데이터를 직접 전송
+  - 폼 방식 
+    - 일반 폼 처리 : 메일링 리스트 관련 뷰 파일 추가(newsletter)
+    - 멀티파트 폼처리 : 사진 업로드 뷰 파일 추가(contest)
+
+  
 ### [0.3.0]
 
 > Chapter 5. QA - Test

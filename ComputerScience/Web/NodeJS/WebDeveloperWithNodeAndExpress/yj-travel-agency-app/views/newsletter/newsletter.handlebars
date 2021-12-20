@@ -1,0 +1,65 @@
+<h2>Sign up for our newletters to receive news and specials!</h2>
+<!-- 동적으로 폼 데이터 post 결과 렌더링을 위한 컨테이너 정의 -->
+<div id="mail-form">
+    <!-- 메일링 리스트 가입을 위한 폼 정의 : 스크립트에서 이벤트 처리 i.e action/method 속성 불필요 -->
+    <form class="form-horizontal" role="form" id="signUpForm">
+        <input type="hidden" name="_csrf" value="{{csrf}}">
+
+        <div class="form-group">
+            <label for="fieldName" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="fieldName" name="name">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="fieldEmail" class="col-sm-2 control-label">Email</label>
+            <div class="col-sm-4">
+                <input type="email" class="form-control" id="fieldEmail" name="email" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    const formTag = document.getElementById('signUpForm');
+    formTag.addEventListener('submit', (e) => {
+        // 기본적으로 form 태그에서 제공하는 폼 전송 이벤트 취소
+        e.preventDefault();
+
+        // API 호출을 위한 데이터 정의
+        const form = e.target;
+
+        const body = JSON.stringify({
+            _csrf: form.elements._csrf.value,
+            name: form.elements.name.value,
+            email: form.elements.email.value,
+        });
+        const headers = {'Content-Type': 'application/json'};
+
+        // fetch api를 이용하여 직접 서버 호출
+        const container = document.getElementById('mail-form');
+        fetch('/api/newsletter-signup', {
+            method: 'post',
+            body: body,
+            headers: headers
+        }).then(res => {
+            if(res.status < 200 || res.status >= 300) {
+                throw new Error(`Request Failed with status ${res.status}`);
+            }
+            return res.json();
+        }).then(json => {
+            container.innerHTML = '<b>Thanks for singing up for our newsletter!</b>';
+        }).catch(err => {
+            console.log(err);
+            container.innerHTML = `<b>Sorry.. We had a problem siging you up. Please <a href="/newsletter">try agin</a></b>`;
+        })
+    });
+</script>
