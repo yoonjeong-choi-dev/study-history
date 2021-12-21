@@ -10,6 +10,7 @@ dotenv.config();
 
 // 커스텀 미들웨어
 const flashMiddleware = require('./lib/middleware/flash');
+const cartValidation = require('./lib/middleware/cartValidation');
 
 const app = express();
 const port = process.env.PORT || 7166;
@@ -92,6 +93,15 @@ app.post('/api/vacation-photo-contest/:year/:month', (req, res) => {
         handler.api.vacationPhotoContest(req, res, fields, files);
     })
 });
+
+// shopping cart
+// 카트 관련 세션 초기화 및 데이터 검증 미들웨어 설정
+app.use(cartValidation.resetValidation);
+app.use(cartValidation.checkWaivers);
+app.use(cartValidation.checkGuestCount);
+
+app.get('/shopping-cart', handler.shoppingCart);
+app.post('/shopping-cart/add-to-cart', handler.shoppingCartProcess);
 
 
 // cookie test
