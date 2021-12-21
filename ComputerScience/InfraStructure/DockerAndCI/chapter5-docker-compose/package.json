@@ -1,0 +1,16 @@
+{
+  "name": "plus-one-for-refresh",
+  "version": "0.1.0",
+  "description": "simple node.js app for multiple container with docker-compose",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "Yoonjeong Choi",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.2",
+    "redis": "2.8.0"
+  }
+}
