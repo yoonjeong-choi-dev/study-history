@@ -1,0 +1,39 @@
+# 관리자 권한 갖기
+sudo: required
+
+# 언어(플랫폼) 선택
+language: generic
+
+# 도커 환경 구성
+services:
+  - docker
+
+# 스크립트를 실행 할 수 있는 테스트 환경 구성
+before_install:
+  - echo "start creating an image with Dockerfile"
+  - docker build -t yjchoi/docker-react-app -f Dockerfile.dev .
+
+# 테스트 실행 스크립트 : 리액트 테스트 스크립트
+script:
+  - docker run -e CI=true yjchoi/docker-react-app npm run test -- --coverage
+
+# 테스트 성공 후 실행할 내용 정의
+after_success:
+  - echo "React App Test Success"
+
+# AWS 배포
+deploy:
+  edge: true
+  provider: elasticbeanstalk
+  region: ap-northeast-2
+  app: yj-react-docker-app
+  env: Yjreactdockerapp-env
+  # 빌드 파일을 압축하여 전송할 S3 버킷 : 일라스틱 빈스톡은 해당 버킷을 생성하고 배포 시 참조
+  bucket_name: elasticbeanstalk-ap-northeast-2-085771716532
+  bucket_path: yj-react-docker-app
+  # 해당 브랜치에 push하는 경우에만 배포
+  on:
+    branch: master
+  # travis-ci 환경 변수로 등록한 aws 키 등록
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_PRIVATE_KEY
