@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "nodejsuser",
+    "password": "nodejsuser",
+    "database": "nodejs_auction",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "nodejsuser",
+    "password": "nodejsuser",
+    "database": "nodejs_auction",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "nodejsuser",
+    "password": "nodejsuser",
+    "database": "nodejs_auction",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}

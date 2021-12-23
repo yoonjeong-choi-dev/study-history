@@ -2,6 +2,12 @@
 
 각 챕터 별, 추가/변경 사항 작성
 
+### [0.7.0]
+
+> Chapter 10. Email
+
+
+
 ### [0.6.0]
 
 > Chapter 10. Middleware
