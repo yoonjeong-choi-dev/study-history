@@ -1,0 +1,21 @@
+version: '3'
+services:
+  # 실행 서비스
+  yj-react:
+    # 이미지 빌드에 사용할 도커파일 설정
+    build:
+      # 도커 이미지를 구성하기 위한 파일 및 디렉터리 위치
+      context: .
+      # 도커 파일 이름
+      dockerfile: Dockerfile
+    # 포트 매핑 : 운영환경이므로 http 포트 80으로 매핑.
+    ports:
+      - "80:80"
+    # 로컬 머신에 있는 어플리케이션 소스 코드들 매핑
+    volumes:
+      # 컨테이너 내부에 설치 된 node 패키지 참조
+      - /yj-react-app/node_modules
+      # 로컬 머신에 있는 소스 코드 매핑 : 로컬 머신 코드:로컬 머신 코드를 참조해야 할 컨테이너 디렉터리
+      - ./:/yj-react-app
+    # 리액트 버그를 수정하기 위한 코드
+    stdin_open: true
