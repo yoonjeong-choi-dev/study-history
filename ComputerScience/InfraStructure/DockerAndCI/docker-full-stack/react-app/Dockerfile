@@ -12,7 +12,7 @@ RUN npm install
 COPY ./ ./
 
 # 리액트 앱 빌드
-CMD ["npm", "run", "build"]
+RUN npm run build
 
 
 # 운영 환경에서 사용할 이미지 빌드
