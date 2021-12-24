@@ -1,0 +1,10 @@
+DROP DATABASE IF EXISTS yjApp;
+
+CREATE DATABASE yjApp;
+USE yjApp;
+
+CREATE TABLE lists (
+    id INTEGER AUTO_INCREMENT,
+    value TEXT,
+    PRIMARY KEY (id)
+);

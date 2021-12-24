@@ -2,7 +2,6 @@
 playground/
 test
 .gitingore~
-.*~
 
 ### IDE ###
 .vscode/
