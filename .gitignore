@@ -2,10 +2,14 @@
 playground/
 test
 .gitingore~
+.*~
 
 ### IDE ###
 .vscode/
 .idea/
+
+# Docker
+/mysql_data
 
 ### node ###
 node_modules/
