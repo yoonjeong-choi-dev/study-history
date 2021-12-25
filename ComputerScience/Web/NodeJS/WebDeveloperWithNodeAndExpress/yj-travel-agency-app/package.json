@@ -19,7 +19,10 @@
     "express": "^4.17.1",
     "express-handlebars": "^3.1.0",
     "express-session": "^1.17.2",
-    "multiparty": "^4.2.2"
+    "html-to-formatted-text": "^2.7.0",
+    "multiparty": "^4.2.2",
+    "nodemailer": "^6.7.2",
+    "nodemailer-sendgrid": "^1.0.3"
   },
   "devDependencies": {
     "eslint": "^8.4.1",

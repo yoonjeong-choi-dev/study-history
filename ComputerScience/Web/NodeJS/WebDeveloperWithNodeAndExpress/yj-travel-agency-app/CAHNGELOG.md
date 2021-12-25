@@ -4,8 +4,20 @@
 
 ### [0.7.0]
 
-> Chapter 10. Email
+> Chapter 11. Email
 
+- 이메일 주소 검증 함수를 유틸 파일에 모듈화
+- sendgrid 서비스를 이용한 메일 전송 서비스
+  - .env에 sendgrid API Key 추가
+  - sendgrid 인증을 위한 nodemailer-sendgrid 패키지 설치
+  - /newsletter-signup 서비스 감사 메일 전송 프로세스 추가
+- nodemailer 패키지를 이용하여 메일 전송 라이브러리(email.js) 추가
+  - html-to-formatted-text 패키지를 이용하여 html을 텍스트 버전으로 생성
+  - sendgrid 설정을 한 nodemailer 인스턴스의 sendMail 프로미스를 래핑한 프로미스 반환
+  - from에 사용하는 이메일은 sendgrid에서 api 키 발급 시 사용한 이메일
+- 이메일 폼(.handlebar) 생성
+  - http://htmlemailboilerplate.com/ 의 html 보일러플레이트 사용하여 메일폼 생성
+  - res.render에 콜백 인자를 넣어 줘서 메일로 전송할 html 렌더링
 
 
 ### [0.6.0]

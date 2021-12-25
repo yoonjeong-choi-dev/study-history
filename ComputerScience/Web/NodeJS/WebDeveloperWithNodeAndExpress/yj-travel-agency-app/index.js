@@ -51,10 +51,10 @@ app.get('/', handler.home);
 app.get('/about', handler.about);
 
 // mailing service
-app.get('/newsletter-signup', handler.newletterSignup);
-app.post('/newsletter-signup/process', handler.newletterSignupProcess);
-app.get('/newsletter-signup/thank-you', handler.newletterSignupThankYou);
-app.get('/newsletter/archive', handler.newletterSignupResult);
+app.get('/newsletter-signup', handler.newsletterSignup);
+app.post('/newsletter-signup/process', handler.newsletterSignupProcess);
+app.get('/newsletter-signup/thank-you', handler.newsletterSignupThankYou);
+app.get('/newsletter/archive', handler.newsletterSignupResult);
 
 app.get('/newsletter', handler.newsletter);
 app.post('/api/newsletter-signup', handler.api.newsletterSignup);

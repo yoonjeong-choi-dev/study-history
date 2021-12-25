@@ -1,4 +1,6 @@
-const { VALID_EMAIL_REGEX, NewsletterSignup } = require('./newsletterSignup');
+const { NewsletterSignup } = require('./newsletterSignup');
+const { VALID_EMAIL_REGEX } = require('./simple-utils');
+const emailService = require('./email')();
 
 // 라우팅 핸들러
 exports.api = {};
@@ -46,13 +48,13 @@ exports.api.newsletterSignup = (req, res) => {
 };
 
 // Form Action 관련 페이지
-exports.newletterSignup = (req, res) => {
+exports.newsletterSignup = (req, res) => {
     res.render('newsletter/newsletter-signup', {
         csrf: 'CSRF token goes here!',
     });
 };
 
-exports.newletterSignupProcess = (req, res) => {
+exports.newsletterSignupProcess = (req, res) => {
     // 요청 바디 체크
     console.log('CSRF token (from hidden form field): ' + req.body._csrf);
     console.log('Name (from visible form field): ' + req.body.name);
@@ -79,8 +81,8 @@ exports.newletterSignupProcess = (req, res) => {
                 type: 'success',
                 intro: 'Thank you!',
                 message: 'Thanks for singing up for our newsletter!',
-            };
-            return res.redirect(303, '/newsletter/archive');
+            };  
+            
         })
         .catch(err => {
             // 에러에 대한 플래시 메시지
@@ -89,18 +91,47 @@ exports.newletterSignupProcess = (req, res) => {
                 intro: 'Database Error',
                 message: 'There is a problem in database. Please try again later',
             };
-            return res.redirect(303, '/newsletter/archive');
-        })
+            return res.redirect(303, '/newsletter-signup/thank-you');
+        });
 
-    // 감사 페이지로 리다이렉트 : 사용자의 브라우저의 url을 깔끔하게 하기 위해
-    //res.redirect(303, '/newsletter-signup/thank-you')
+    // 렌더링된 html을 이메일로 전송 
+    res.render('email-form/newsletter-email-form',{
+        layout: null, name: name
+    }, (err, html) => {
+        if (err) {
+            console.log(err);
+            // 에러에 대한 플래시 메시지
+            req.session.flash = {
+                type: 'danger',
+                intro: 'Email Service Error',
+                message: 'There is a problem in Email Content Rendering...',
+            };
+            return res.redirect(303, '/newsletter-signup/thank-you');
+        }
+
+        emailService(email, "YJ Newsletter Service", html)
+            .then((info) => {
+                return res.redirect(303, '/newsletter-signup/thank-you');
+            })
+            .catch(err => {
+                console.log('Unable to send confirmation :', err);
+
+                // 에러에 대한 플래시 메시지
+                req.session.flash = {
+                    type: 'danger',
+                    intro: 'Email Service Error',
+                    message: 'There is a problem in Email Service...',
+                };
+                return res.redirect(303, '/newsletter-signup/thank-you');
+            });
+    });
 };
 
-exports.newletterSignupThankYou = (req, res) => {
+exports.newsletterSignupThankYou = (req, res) => {
     res.render('newsletter/newsletter-signup-thank-you');
 };
 
-exports.newletterSignupResult = (req, res) => {
+exports.newsletterSignupResult = (req, res) => {
     res.render('newsletter/newsletter-signup-developing');
 };
 
