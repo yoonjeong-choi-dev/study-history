@@ -1,9 +1,13 @@
 const express = require('express');
 const expressHandlebars = require('express-handlebars');
 const path = require('path');
+const fs = require('fs');
 const multiparty = require('multiparty');
 const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
+const morgan = require('morgan');
+
+const cluster = require('cluster');
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -21,6 +25,28 @@ app.engine('handlebars', expressHandlebars({
     defaultLayout: 'defaultLayout',
 }));
 app.set('view engine', 'handlebars');
+
+
+// 클러스터 확인 미들웨어
+app.use((req, res, next) => {
+    if (app.get('env') === 'development') {
+        if(cluster.isWorker) {
+            console.log(`Worker ${cluster.worker.id} received request`)
+        }
+    }
+    next();
+})
+
+// 로그 미들웨어 설정
+switch(app.get('env')) {
+    case 'development':
+        app.use(morgan('dev'));
+        break;
+    case 'production':
+        const logStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'});
+        app.use(morgan('combined', { stream: logStream }));
+        break;
+};
 
 // 정적 리소스 미들웨어 설정
 app.use(express.static(path.join(__dirname, '/public')));
@@ -107,7 +133,18 @@ app.post('/shopping-cart/add-to-cart', handler.shoppingCartProcess);
 // cookie test
 app.get('/cookie-test', handler.cookieTest);
 
-
+// server down test : only for development
+app.get('/server-down', (req, res) => {
+    if (app.get('env') === 'development') {
+        process.nextTick(()=> {
+            throw new Error('The server is going to be DOWN');
+        });
+    } else {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end('<h2>This test is only available in Development Environment</h2>');
+    }
+    
+});
 
 
 // Custom 404 page
@@ -116,13 +153,30 @@ app.use(handler.notFound);
 // Custom 500 page
 app.use(handler.serverError);
 
-if (require.main === module) {
-    // 노드가 index.js 실행 시 => 포트 열기
+// uncaughtException Handler
+process.on('uncaughtException', err => {
+    console.error('UNCAUGHT EXCEPTION\n', err.stack);
+
+    // 프로세스 종료 전에 실행해야하는 작업들 수행
+
+    // 작업 종료
+    process.exit(1);
+})
+
+const startServer = (port) => {
     // Open the port
     app.listen(port, () => {
-        console.log(`Express Server started on http://localhost:${port}`);
+        console.log(
+            `Express Server started on http://localhost:${port}` +
+            ` with ${app.get('env')} mode`);
     });
+}
+
+if (require.main === module) {
+    // 노드가 index.js 실행 시 => 포트 열기
+    startServer(port);
 } else {
     // 다른 경우 => 외부 스크립트에서 import 하기 위해 모듈 export (테스트 용도)
-    module.exports = app;
+    exports.app = app;
+    exports.startServer = startServer;
 }

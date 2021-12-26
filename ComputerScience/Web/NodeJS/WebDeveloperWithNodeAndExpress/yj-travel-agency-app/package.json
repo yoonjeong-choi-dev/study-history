@@ -1,10 +1,12 @@
 {
   "name": "yj-travel-agency-app",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Travel Agency App",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index",
+    "start": "NODE_ENV=production node index",
+    "cluster": "node cluster",
     "test": "jest",
     "lint": "eslint index.js lib"
   },
@@ -20,6 +22,7 @@
     "express-handlebars": "^3.1.0",
     "express-session": "^1.17.2",
     "html-to-formatted-text": "^2.7.0",
+    "morgan": "^1.10.0",
     "multiparty": "^4.2.2",
     "nodemailer": "^6.7.2",
     "nodemailer-sendgrid": "^1.0.3"
