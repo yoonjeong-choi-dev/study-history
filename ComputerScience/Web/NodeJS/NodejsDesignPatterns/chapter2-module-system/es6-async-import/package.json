@@ -1,0 +1,12 @@
+{
+  "name": "es6-async-import",
+  "version": "1.0.0",
+  "description": "Example for async import for ES6 module",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

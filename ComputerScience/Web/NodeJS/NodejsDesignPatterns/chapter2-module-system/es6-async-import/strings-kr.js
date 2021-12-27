@@ -1,0 +1,1 @@
+export const HELLO = '헬로 월드';
