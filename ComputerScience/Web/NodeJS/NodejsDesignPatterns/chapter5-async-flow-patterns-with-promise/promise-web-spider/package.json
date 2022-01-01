@@ -1,0 +1,17 @@
+{
+  "name": "web-spider-with-promise",
+  "version": "1.0.0",
+  "description": "download web contents to local from url argument",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yoonjeong Choi",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "slug": "^5.2.0",
+    "superagent": "^6.1.0"
+  }
+}
