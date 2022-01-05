@@ -50,6 +50,7 @@ switch(app.get('env')) {
 
 // 정적 리소스 미들웨어 설정
 app.use(express.static(path.join(__dirname, '/public')));
+app.use('/img', express.static(path.join(__dirname, 'uploads')));
 
 // 요청 body 분석 미들웨어 설정
 app.use(express.json());

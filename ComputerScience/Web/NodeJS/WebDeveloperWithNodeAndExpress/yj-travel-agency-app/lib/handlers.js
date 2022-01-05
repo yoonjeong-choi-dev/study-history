@@ -1,3 +1,5 @@
+const path = require('path');
+const fs = require('fs');
 const { NewsletterSignup } = require('./newsletterSignup');
 const { VALID_EMAIL_REGEX } = require('./simple-utils');
 const emailService = require('./email')();
@@ -139,6 +141,18 @@ exports.newsletterSignupResult = (req, res) => {
 // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 // contest 관련
 // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+// 사진 저장을 위한 디렉터리 생성
+// 업로드 스토리지 생성
+const vacationDir = 'uploads/vacation';
+try {
+    fs.readdirSync(vacationDir);
+} catch (err) {
+    console.log('Create uploads directory');
+    fs.mkdirSync(vacationDir, {recursive: true});
+}
+
+
 // AJAX 호출 관련 페이지
 exports.vacationPhotoContestAjax = (req, res) => {
     const curDate = new Date();
@@ -152,7 +166,25 @@ exports.api.vacationPhotoContest = (req, res, fields, files) => {
     console.log('field data :', fields);
     console.log('files :', files);
     res.send({ 'result': 'success' });
+
+    const photo = files.photo[0];
+    const dir = path.join(vacationDir, Date.now().toString());
+    const filePath = path.join(dir, photo.originalFilename);
+    fs.mkdirSync(dir, {recursive: true});
+    fs.renameSync(photo.path, filePath);
+
+    saveContestEntry('vacation-photo', fields.email, req.params.year, req.params.month, path)
 };
+
+function saveContestEntry(contestName, email, year, month, photoPath) {
+    console.log('DEBUG : saveContestEntry');
+    console.log(contestName);
+    console.log(email);
+    console.log(year);
+    console.log(month);
+    console.log(photoPath);
+
+}
 
 exports.api.vacationPhotoContestError = (req, res, err) => {
     res.send({ result: 'error', error: err.message })

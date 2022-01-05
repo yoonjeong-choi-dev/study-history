@@ -2,6 +2,25 @@
 
 각 챕터 별, 추가/변경 사항 작성
 
+### [0.9.0]
+
+> Chapter 13. Database
+- 이미지 로컬 업로드 구현
+- 각 db에서 유저 설정 방식 설명
+- mysql
+  - CREATE USER 'expressuser'@'localhost' IDENTIFIED BY 'expressuser';
+  - create database expressdb;
+  - grant all privileges on expressdb.* to 'expressuser'@'localhost';
+  - flush privileges;
+- mongodb
+  - sudo systemctl start mongod
+  - use express_test
+  - db.createUser({user: 'expressuser', pwd: 'expressuser',  roles: [{ role: "dbOwner", db: "express_test" }]})
+- lodash
+  - DB 스키마는 스네이크 케이스, js는 카멜 케이스를 사용
+  - 스네이크 <-> 카멜 케이스를 변환해주는 라이브러리
+
+
 ### [0.8.0]
 
 > Chapter 12. Production Environment
