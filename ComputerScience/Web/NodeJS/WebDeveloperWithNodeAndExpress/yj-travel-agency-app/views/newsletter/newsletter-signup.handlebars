@@ -2,7 +2,7 @@
 <!-- 메일링 리스트 가입을 위한 폼 정의 -->
 <form class="form-horizontal" role="form"
     action="/newsletter-signup/process?form=newsletter" method="POST">
-    <input type="hidden" name="_csrf" value="{{csrf}}">
+    <input type="hidden" name="_csrf" value="{{_csrfToken}}">
 
     <div class="form-group">
         <label for="fieldName" class="col-sm-2 control-label">Name</label>

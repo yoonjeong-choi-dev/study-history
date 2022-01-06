@@ -1,6 +1,6 @@
 {
   "name": "yj-travel-agency-app",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Travel Agency App",
   "main": "index.js",
   "scripts": {
@@ -18,6 +18,7 @@
   "dependencies": {
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "csurf": "^1.11.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-handlebars": "^3.1.0",

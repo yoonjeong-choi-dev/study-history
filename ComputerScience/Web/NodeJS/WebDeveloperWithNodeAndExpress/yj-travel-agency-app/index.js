@@ -2,10 +2,12 @@ const express = require('express');
 const expressHandlebars = require('express-handlebars');
 const path = require('path');
 const fs = require('fs');
+const https = require('https'); 
 const multiparty = require('multiparty');
 const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
 const cors = require('cors');
+const csrf = require('csurf');
 const morgan = require('morgan');
 
 const cluster = require('cluster');
@@ -68,6 +70,14 @@ app.use(expressSession({
     // 세션 ID 쿠키 서명에 사용하는 비밀키
     secret: process.env.YJ_COOKIE_SECRET
 }));
+
+// body-parser, cookie-parser, express-session 이후에 csurf 설정
+app.use(csrf({cookie: true}));
+app.use((req, res, next) => {
+    // res.locals에 토큰 추가
+    res.locals._csrfToken = req.csrfToken();
+    next();
+})
 
 // 커스텀 미들웨어
 app.use(flashMiddleware);
@@ -166,13 +176,25 @@ process.on('uncaughtException', err => {
     process.exit(1);
 })
 
+// https 인증서 설정
+const httpsOptions = {
+    key: fs.readFileSync(__dirname + '/ssl/yjchoi.pem'),
+    cert: fs.readFileSync(__dirname + '/ssl/yjchoi.crt'),
+};
+
 const startServer = (port) => {
-    // Open the port
-    app.listen(port, () => {
+    // Open the port with https
+    https.createServer(httpsOptions, app).listen(port, () => {
         console.log(
-            `Express Server started on http://localhost:${port}` +
+            `Express Server started on https://localhost:${port}` +
             ` with ${app.get('env')} mode`);
     });
+
+    // app.listen(port, () => {
+    //     console.log(
+    //         `Express Server started on http://localhost:${port}` +
+    //         ` with ${app.get('env')} mode`);
+    // });
 }
 
 if (require.main === module) {

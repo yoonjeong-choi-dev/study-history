@@ -2,6 +2,21 @@
 
 각 챕터 별, 추가/변경 사항 작성
 
+### [0.11.0]
+
+> Chapter 18. Security
+- https 설정을 위한 인증서 추가
+  - 비밀키 및 공개키 생성 스크립트 추가
+  - FQDN은 localhost로 설정
+  - 무료 인증 기관 : Let's Encrypt
+- 익스프레스 앱에 https 설정
+  - 익스프레스 자체에서 포트를 열지 않고, https 모듈 사용
+  - 일반적으로는 프록시를 사용하여 https 관련 보안 통신은 프록시에서 처리
+- csrf 방지를 위한 csurf 미들웨어 사용
+  - 폼 및 AJAX 호출 전체에 _csrf 필드 추가하여, 서버에서 받은 토큰을 입력
+  - 해당 필드는 csurf로 생성된 토큰과 일치해야 요청 처리
+  - API 서버의 경우 csurf 대신 api-key 사용
+
 ### [0.10.0]
 
 > Chapter 14. REST API
