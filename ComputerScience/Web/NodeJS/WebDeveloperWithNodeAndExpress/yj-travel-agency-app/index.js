@@ -5,6 +5,7 @@ const fs = require('fs');
 const multiparty = require('multiparty');
 const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
+const cors = require('cors');
 const morgan = require('morgan');
 
 const cluster = require('cluster');
@@ -49,6 +50,7 @@ switch(app.get('env')) {
 };
 
 // 정적 리소스 미들웨어 설정
+app.use('/api', cors());    // api 경로에만 cors 적용
 app.use(express.static(path.join(__dirname, '/public')));
 app.use('/img', express.static(path.join(__dirname, 'uploads')));
 

@@ -2,6 +2,14 @@
 
 각 챕터 별, 추가/변경 사항 작성
 
+### [0.10.0]
+
+> Chapter 14. REST API
+- API 사용을 허가 위한 cors 패키지 설치 및 설정
+  - /api 경로에만 cors 허용
+- 개발 테스트용으로 node-fetch 사용 가능
+  - 브라우저의 fetch API 모킹
+
 ### [0.9.0]
 
 > Chapter 13. Database
