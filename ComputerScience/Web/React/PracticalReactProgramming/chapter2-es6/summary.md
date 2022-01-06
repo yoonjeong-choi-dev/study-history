@@ -141,24 +141,228 @@
 
 ## Section 3. 강화된 함수의 기능
 ### 매개변수에 추가된 기능
-
+* 매개변수 기본값
+  * 일반적인 프로그래밍 언어에서 지원하던 기능
+  ```
+  function func(a = 1) {
+    console.log(a);
+  }
+  func();   // 1
+  ```
+  * 기본 값으로 함수 호출을 가능 i.e 입력값이 undefined인 경우에만 함수가 호출
+  ```
+  function getDefault() {
+    return 1;
+  }
+  function func(a = getDefault()) {
+    console.log(a);
+  }
+  func();   // 1
+  ```
+* 나머지 매개변수(rest parameter)
+  * 입력된 인수 중에 정의된 매개 변수를 제외한 나머지 변수들을 배열로 만들어줌
+  ```
+  function print(a, ...rest) {
+    console.log(a, rest);
+  }
+  print(1, 2, 3); // {a: 1, rest: [2, 3]}
+  ```
+  * ES5에서는 `argument` 키워드가 비슷한 역할
+* 명명된 매개변수(named parameter)
+  * 객체 비구조화를 이용하여 구현 i.e 매개변수들로 구성된 객체를 함수의 인자로 넘김
+  * 함수 호출 시, 매개변수의 이름과 값을 동시에 적을 수 있음
+  * example
+  ```
+  // function prototype : clipValue(numbers, greaterThan, lessThan)
+  const arr = [1, 2, 3, 4, 5];
+  const min = 2;
+  const max = 1;
+  const minClip = clipValue({numbers: arr, lessThan: min});
+  const maxClip = clipValue({numbers: arr, greaterThan: max});
+  ```
+  * 고려할 점
+    * 착각 : 함수 호출 시, 매번 객체가 생성되어 비효율
+    * 팩트 : JS 엔진이 최적화를 통해 객체를 새롭게 생성 X
 
 ### 함수를 정의하는 새로운 방법 : 화살표 함수
+* 화살표 함수를 정의하는 방법
+  * 중괄호를 사용하지 않으면 오른쪽의 계산 결과가 반환
+    ```
+    const add = (a, b) => a+b;
+    console.log(add(1, 2));   //2
+    ```
+  * 매개 변수가 하나인 경우, 왼쪽 소괄호 생략 가능
+    ```
+    const plusOne = a => a+1;
+    console.log(plusOne(2)); //3
+    ```
+  * 함수 본문이 여러 줄인 경우 중괄호로 묶어서 사용
+* 일반적인 함수(function 키워드)와 다른점
+  * this와 arguments가 바인딩 되지 않음
+    * 화살표 함수 안에서 참조하는 this와 argments는 자신을 감싸는 가장 가까운 일반 함수 참조
+    * 화살표 함수에서 arguments가 필요하면 나머지 매개변수(rest argument) 사용
+  * 요약
+    * 일반 함수는 기본적으로 this가 window 객체를 참조
+    * 화살표 함수는 상위 함수의 this를 참조
+* 일반 함수의 this 바인딩에서 발생하는 문제
+  * 일반 함수는 this가 호출 시점에 사용된 객체에 바인딩
+    ```
+      const obj = {
+        value: 1,
+        // increase 함수는 일반 함수여서 this는 obj로 바인딩
+        increase() {
+          this.value++; 
+        }
+      };
 
+      obj.increase();
+      console.log(obj.value); // 2
 
+      const increase = obj.increase;  
+      increase(); // 객체 없이 호출하는 경우, 전역 객체(현재는 window)에 바인딩
+      console.log(obj.value); // 2
+    ```
+  * setInterval의 콜백에서의 bind
+    * setInterval은 window 객체의 메서드 => this는 window를 가리킴
+    * 콜백을 일반 함수가 아닌 화살표 함수를 사용함으로써, this의 컨텍스트 유지 가능
+    * example
+      ```
+      function somethingWrong() {
+        this.value = 1;
+        setInterval(function callback() {
+          this.value++;   // this === window
+        }, 1000);
+      }
 
+      function somethingRight() {
+        this.value =1;
+        setInterval(() => {
+          this.value++; // this === somethingRight
+        }, 1000);
+      }
+
+      const wrong = new somethingWrong();
+      const right = new somethingRight();
+      setInterval(()=>{
+        console.log(wrong.value);   // 1 -> 1 -> 1 -> 1 ..
+        console.log(right.value);   // 2 -> 3 -> 4 -> 5 ..
+      }, 1000)
+      ```
+      
 ## Section 4. 비동기 프로그래밍(1) 프로미스
-### 프로미스 이해
+* 프로미스 
+  * 비동기 상태를 값으로 다룰 수 있는 객체
+  * 비동기 프로그래밍을 동기 프로그래밍 방식으로 코딩 가능
+* 프로미스 보급전에는 비동기 프로그래밍을 위해 콜백 패턴이 많이 사용
 
+### 프로미스 이해
+* 콜백 패턴의 문제
+  * 콜백 패턴은 코드의 흐름이 순차적이지 않음
+  * 콜백 지옥 발생
+  * (BUT) 프로미스를 사용하면 코드가 순차적으로 실행되게 작성 가능
+* 프로미스의 3가지 상태
+  * 대기(pending) : 결과를 기다리는 중
+  * 이행(fulfilled) : 수행이 정상적으로 끝나서 결과값을 가진 상태
+  * 거부(rejected) : 수행이 비정상적으로 끝남
+* 프로미스의 처리됨(settled) 상태
+  * 프로미스가 이행 or 거부된 상태
+  * 처리됨 상태에서는 더 이상 다른 상태로 변경 X
+* 프로미스 생성 방법
+  * new 키워드로 생성
+    * `new Promise((resovle, reject) => { ... } );`
+    * 생성자는 (resolve, reject)를 인자로 갖는 콜백 함수를 매개변수로 갖는다
+    * 수행이 성공한 경우 resovle를 호출하고, 수행이 실패한 경우 reject 호출
+  * Promise.reject : 거부됨 상태의 프로미스 생성
+  * Promise.resolve(arg)
+    * 입력값 arg가 프로미스인 경우, arg 자체를 반환
+    * 입력값 arg가 프로미스가 아닌 경우, 이행됨 상태의 프로미스 반환
+* 프로미스의 then 메서드
+  * 처리됨 상태가 된 프로미스를 처리할 때 사용하는 메서드
+  * 처리됨 상태가 가지는 결과값을 인자로 가짐
+  * then은 항상 프로미스 반환 
+    * 연속적으로 then 메서드 반환 가능
+    * 프로미스의 파이프라인 구성 가능
+  * 중요한 특징
+    * then 파이프라인은 항상 연결된 순서로 호출
+    * 비동기 프로그래밍을 동기 프로그래밍 방식으로 코드 작성 가능
+* 프로미스의 catch 메서드 
+  * 프로미스 수행 중 발생하는 예외를 처리하는 메서드
+  * 항상 Error 객체를 인자로 받음
+  * then의 콜백으로 (null, err)을 매개변수로 하는 콜백 함수로 설정해도 같은 기능 수행
+    * 가독성을 위해 catch 메서드를 사용하는 것이 좋음
+    * example
+      ```
+      fetch('api/user')
+        .then(data => {
+          console.log(data);
+        })
+        .then(null, err => {  // .catch(err=>{...}) 와 동일
+          console.error('ERROR!!! : ', err)
+        })
+      ```
+* 프로미스의 finally 메서드
+  * 프로미스가 이행됨/거부됨 상태일 때 호출 i.e 처리됨 상태(settled)가 될 떄 호출
+  * 처리됨 상태의 프로미스의 데이터(결과 or 에러)를 건드리지 않고 추가 작업을 할 때 유용
+  * 데이터 요청에 대한 성공/실패 여부 상관없이 특정 작업을 수행할 때(ex 로그) 유용
 
 ### 프로미스 활용
+* Promise.all : 병렬로 처리
+  * 여러 개의 프로미스를 병렬로 처리할 때 사용되는 함수
+    * 비동기 함수 간에 서로 의존성이 없는 경우, 병렬 처리가 더 빠름
+    * example
+      ```
+      Promise.all([fetch('/api/data/1'), fetch{'/api/data/2'}])
+        .then(([data1, data2]) => {
+          console.log(data1, data2);
+        });
+      ```
+  * 비동기 함수간 의존성이 있어 순서가 중요한 경우 사용 불가
+    * 순차적으로 실행해야 되는 경우, then 메서드를 이용한 프로미스 파이프라이닝 필요
+    * example
+      ```
+      fetch('api/user')
+        .then(ret => {
+          const userId = ret.json().id;
+          return fetch('api/user/userId');
+        })
+        .then(ret = .{
+          console.log(ret);
+        });
+      ```
+  * 프로미스를 반환
+    * 인자로 받은 모든 프로미스가 처리됨 상태인 경우에 처리됨 상태가 됨
+    * 인자로 받은 프로미스 중 하나라도 거부되면, 반환되는 프로미스도 거부됨 상태
+* Promise.race : 가장 빨리 처리된 프로미스 반환
+  * 인자로 받은 프로미스 중 가장 빨리 처리됨 상태가 된 프로미스 반환
 
 
 ### 프로미스 사용 시 주의할 점
+* return 키워드
+  * then 메서드의 인자는 이전 then의 콜백 함수에서 반환하는 값에 대한 프로미스
+    * 프로미스인 경우, 프로미스 자체를 반환
+    * 프로미스가 아닌 경우, 반환값을 가지고 이행됨 상태의 프로미스 반환
+  * return을 생략하는 경우 다음 then에서 받는 인자는 undefined
+* 프로미스 자체는 불변성을 가짐
+* 프로미스를 중첩해서 사용하지 않기
+  * 프로미스를 중첩하는 것은 콜백 패턴의 단점을 그대로 가져가는 행위
+  * 프로미스를 중첩하는 것은 결국 순차적으로 실행되어 함을 뜻하므로, 순차적 처리 패턴을 사용
+  ```
+    fetch('api/user')
+      .then(ret => {
+        const userId = ret.json().id;
+        return fetch('api/user/userId');
+      })
+      .then(ret = .{
+        console.log(ret);
+      });
+  ```
 
 
 
 ## Section 5. 비동기 프로그래밍(2) async/await
+* 비동기 프로그래밍을 동기 프로그래밍으로 작성할 수 있도록 함수에 추가된 기능
+* 프로미스의 then 메서드의 체이닝보다 가독성이 좋아진다
+
 ### async/await 이해
 
 
