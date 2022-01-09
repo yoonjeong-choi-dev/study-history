@@ -4,3 +4,10 @@
 
 # 파일 정보
 - 각 챕터 별 구현 코드
+- chapter 2~5
+	- webapps/jsp-programming 디렉터리 사용
+	- localhost:8080/jsp-programming 로 접근
+- chpater 6~
+	- webapps/yj 디렉터리 사용
+	- localhost:8080/yj 로 접근
+	- 각 챕터 디렉터리 내부 파일들을 복사하여 테스트 가능
