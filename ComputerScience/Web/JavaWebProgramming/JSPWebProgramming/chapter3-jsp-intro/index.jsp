@@ -4,9 +4,9 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <html>
 <head>
-    <title></title>
+    <title>Chapter3 Index</title>
 <head>
 <body>
-    
+    <h1>Chatper3. JSP 시작</h1>
 </body>
 </html>
