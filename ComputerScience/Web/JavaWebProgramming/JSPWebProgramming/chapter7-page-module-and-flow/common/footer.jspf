@@ -1,0 +1,8 @@
+<%-- page 디렉티브 : 문서 타입, 인코딩 지정 --%>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%-- page 디렉티브 : 디렉티브나 스크립트 코드로 인한 공백 제거 --%>
+<%@ page trimDirectiveWhitespaces="true" %>
+<div width="400" style="border: 1px solid;">
+<h1>web.xml을 통해 포함(@include)시키는 푸터 파일 </h1>
+<h3>현재 시간은 <%=CURRENT_TIME%> 입니다. 헤더에서 정의한 변수입니다<h3>
+</div>
