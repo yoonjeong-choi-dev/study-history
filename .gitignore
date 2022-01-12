@@ -6,6 +6,7 @@ test
 ### IDE ###
 .vscode/
 .idea/
+*.iml
 
 # Docker
 /mysql_data
