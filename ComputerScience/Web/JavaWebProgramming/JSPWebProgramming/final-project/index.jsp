@@ -12,11 +12,14 @@
 <u:isLogin>
 	<strong>${authUser.name}</strong>님, 안녕하세요.<br>
 	<a href="logout.do">[로그아웃하기]</a><br>
-	<a href="changePw.do">[암호변경하기]</a>
+	<a href="changePw.do">[암호변경하기]</a><br>
 </u:isLogin>
 <u:notLogin>
 	<a href="join.do">[회원가입하기]</a><br>
-	<a href="login.do">[로그인하기]</a>
+	<a href="login.do">[로그인하기]</a><br>
 </u:notLogin>
+
+<a href="article/write.do">[게시글 작성]</a>
+<a href="article/list.do">[게시글 보기]</a>
 </body>
 </html>

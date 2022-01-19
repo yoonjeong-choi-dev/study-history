@@ -59,6 +59,9 @@
 	<filter-mapping>
 		<filter-name>LoginCheckFilter</filter-name>
 		<url-pattern>/changePw.do</url-pattern>
+		<url-pattern>/article/write.do</url-pattern>
+		<url-pattern>/article/modify.do</url-pattern>
+		<url-pattern>/article/delete.do</url-pattern>
 	</filter-mapping>
 
 </web-app>
