@@ -1,0 +1,19 @@
+{
+  "name": "section2-babel-config",
+  "version": "1.0.0",
+  "description": "Babel Config",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yoonjeong Choi",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/cli": "^7.16.8",
+    "@babel/core": "^7.16.7",
+    "@babel/plugin-transform-arrow-functions": "^7.16.7",
+    "@babel/plugin-transform-template-literals": "^7.16.7",
+    "@babel/preset-react": "^7.16.7",
+    "babel-preset-minify": "^0.5.1"
+  }
+}
