@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Input 태그 예제</title>
+</head>
+<body>
+<p>다양한 input 타입 예제</p>
+
+<h4>HTML4 제공</h4>
+<form method="GET">
+    text: 
+    <label for="name">이름</label>
+    <input type="text" name="name" id="name"/>
+    <br>
+    password: 
+    <input type="password" name="password" id="password" />
+    <label for="password">비밀번호</label><br>
+    file: <input type="file" name="file"/><br>
+    button: <input type="button" value="button"><br>
+    checkbox: <input type="checkbox" name="checkbox"><br>
+    hidden: <input hidden id="123"><br>
+    image: <input type="image" name="image"><br>
+    radio: <input type="radio" name="radio"><br>
+
+    sumbit: <input type="submit" value="submit"><br>
+</form>
+
+<hr>
+<h4>HTML5 제공</h4>
+<form method="GET">
+    color: <input type="color"><br>
+    date: <input type="date"><br>
+    datetime: <input type="datetime"><br>
+    datetime-local: <input type="datetime-local"><br>
+    email: <input type="email"><br>
+    month: <input type="month"><br>
+    number: <input type="number"><br>
+    range: <input type="range"><br>
+    search: <input type="search"><br>
+    tel: <input type="tel"><br>
+    time: <input type="time"><br>
+    url: <input type="url"><br>
+    week: <input type="week"><br>
+    sumbit: <input type="submit" value="submit"><br>
+</form>
+<hr>
+
+<h4>fieldset & legend</h4>
+<form>
+    <fieldset>
+        <legend>로그인</legend>
+        <table>
+            <tr>
+                <td><label for="name">이름</label></td>
+                <td><input type="text" name="name" id="name"></td>
+            </tr>
+            <tr>
+                <td><label for="email">이메일</label></td>
+                <td><input type="email" name="email" id="email"></td>
+            </tr>
+            <tr>
+                <td><label for="password">비밀번호</label></td>
+                <td><input type="password" name="password" id="password"></td>
+            </tr>
+        </table>
+        <input type="submit" value="가입">
+    </fieldset>
+</form>
+
+</body>
+</html>
