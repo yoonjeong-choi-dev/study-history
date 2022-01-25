@@ -1,0 +1,17 @@
+{
+  "name": "section3-polyfill",
+  "version": "1.0.0",
+  "description": "Babel and Polyfill",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yoonjeong Choi",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/cli": "^7.16.8",
+    "@babel/core": "^7.16.7",
+    "@babel/preset-env": "^7.16.11",
+    "core-js": "^3.20.3"
+  }
+}
