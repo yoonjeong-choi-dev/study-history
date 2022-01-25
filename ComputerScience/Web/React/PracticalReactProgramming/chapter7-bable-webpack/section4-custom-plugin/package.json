@@ -1,0 +1,15 @@
+{
+  "name": "section4-custom-plugin",
+  "version": "1.0.0",
+  "description": "Babel custom plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yoonjeong Choi",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/cli": "^7.16.8",
+    "@babel/core": "^7.16.7"
+  }
+}
