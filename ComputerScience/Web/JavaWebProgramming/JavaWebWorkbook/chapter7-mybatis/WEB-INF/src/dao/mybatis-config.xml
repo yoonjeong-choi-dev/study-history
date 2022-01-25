@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- <properties url="file:///home/yjchoi/apps/tomcat/apache-tomcat-8.5.73/webapps/yj/WEB-INF/src/dao/db.properties" /> -->
+    <settings>
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+    <typeAliases>
+        <typeAlias type="vo.Project" alias="project" />
+        <typeAlias type="vo.Member" alias="member" />
+    </typeAliases>
+
+    <environments default="development">
+        <environment id="development">
+            <!-- 트랜잭션 관리 방식 설정 : jdbc -> 직접 커밋/롤백 가능 -->
+            <transactionManager type="JDBC" />
+            <!-- 데이터소스 설정 : 커넥션 풀 사용 -->
+            <!-- <dataSource type="POOLED">
+                <property name="driver" value="${driver}" />
+                <property name="url" value="${url}" />
+                <property name="username" value="${username}" />
+                <property name="password" value="${password}" />
+            </dataSource> -->
+            <dataSource type="JNDI">
+                <property name="data_source" value="java:comp/env/jdbc/javaweb" />
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <!-- <mapper resource="dao/MySqlProjectDao.xml" /> -->
+        <mapper url="file:///home/yjchoi/apps/tomcat/apache-tomcat-8.5.73/webapps/yj/WEB-INF/src/dao/MySqlProjectDao.xml" />
+        <mapper url="file:///home/yjchoi/apps/tomcat/apache-tomcat-8.5.73/webapps/yj/WEB-INF/src/dao/MySqlMemberDao.xml" />
+    </mappers>
+</configuration>

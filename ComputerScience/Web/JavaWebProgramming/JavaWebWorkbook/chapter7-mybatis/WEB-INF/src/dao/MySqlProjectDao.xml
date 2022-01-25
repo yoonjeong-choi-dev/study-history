@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ProjectDao">
+    <!-- type: mybatis-config에서 설정한 alias -->
+    <resultMap type="project" id="projectResultMap">
+        <!-- select 쿼리에 대한 캐싱을 위해 설정 -->
+        <id column="id" property="id" />
+        <!-- colmun : db 컬럼 이름, property: vo 속성 이름-->
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="start_date" property="startDate" javaType="java.sql.Date" />
+        <result column="end_date" property="endDate" javaType="java.sql.Date" />
+        <result column="state" property="state" />
+        <result column="created_date" property="createdDate" javaType="java.sql.Date" />
+        <result column="tags" property="tags" />
+    </resultMap>
+
+    <!-- <select id="selectList" resultMap="projectResultMap">
+        select id, title, start_date, end_date, state
+        from projects
+        order by id desc
+    </select> -->
+
+    <select id="selectList" parameterType="map" resultMap="projectResultMap">
+        select id, title, start_date, end_date, state
+        from projects
+        order by
+        <choose>
+            <when test="orderCond == 'title_asc'">id asc</when>
+            <when test="orderCond == 'title_desc'">id desc</when>
+            <when test="orderCond == 'start_date_asc'">start_date asc</when>
+            <when test="orderCond == 'start_date_desc'">start_date desc</when>
+            <when test="orderCond == 'end_date_asc'">end_date asc</when>
+            <when test="orderCond == 'end_date_desc'">end_date desc</when>
+            <when test="orderCond == 'state_asc'">state asc</when>
+            <when test="orderCond == 'state_desc'">state desc</when>
+            <when test="orderCond == 'id_asc'">id asc</when>
+            <otherwise>id desc</otherwise>
+        </choose>
+    </select>
+
+    <select id="selectById" parameterType="int" resultMap="projectResultMap">
+        select id, title, content, start_date, end_date, state, created_date, tags
+        from projects 
+        where id=#{value}
+    </select>
+
+    <insert id="insert" parameterType="project">
+        insert into projects(title,content,start_date,end_date,state,created_date,tags)
+        values (#{title},#{content},#{startDate},#{endDate},0,now(),#{tags})
+    </insert>
+
+    <!-- <update id="update" parameterType="project">
+        update projects set
+        title=#{title},
+        content=#{content},
+        start_date=#{startDate},
+        end_date=#{endDate},
+        state=#{state},
+        tags=#{tags}
+        where id=#{id}
+    </update> -->
+
+    <update id="update" parameterType="map">
+        update projects
+        <set>
+            <if test="title != null">title=#{title},</if>
+            <if test="content != null">content=#{content},</if>
+            <if test="startDate != null">start_date=#{startDate},</if>
+            <if test="endDate != null">end_date=#{endDate},</if>
+            <if test="state != null">state=#{state},</if>
+            <if test="tags != null">tags=#{tags}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from projects 
+        where id=#{value}
+    </delete>
+</mapper>

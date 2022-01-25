@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.MemberDao">
+    <!-- type: mybatis-config에서 설정한 alias -->
+    <resultMap type="member" id="memberResultMap">
+        <!-- select 쿼리에 대한 캐싱을 위해 설정 -->
+        <id column="id" property="id" />
+        <!-- colmun : db 컬럼 이름, property: vo 속성 이름-->
+        <result column="name" property="name" />
+        <result column="email" property="email" />
+        <result column="password" property="password" />
+        <result column="created_date" property="createdDate" javaType="java.sql.Date" />
+        <result column="modified_date" property="modifiedDate" javaType="java.sql.Date" />
+    </resultMap>
+
+    <select id="selectList" parameterType="map" resultMap="memberResultMap">
+        select id, name, email, created_date
+        from members
+        order by
+        <choose>
+            <when test="orderCond == 'name_asc'">name asc</when>
+            <when test="orderCond == 'name_desc'">name desc</when>
+            <when test="orderCond == 'email_asc'">email asc</when>
+            <when test="orderCond == 'email_desc'">email desc</when>
+            <when test="orderCond == 'created_date_asc'">created_date asc</when>
+            <when test="orderCond == 'created_desc'">created_date desc</when>
+            <when test="orderCond == 'id_asc'">id asc</when>
+            <otherwise>id desc</otherwise>
+        </choose>
+    </select>
+
+    <select id="selectById" parameterType="int" resultMap="memberResultMap">
+        select id, email, name, created_date
+        from members 
+        where id=#{value}
+    </select>
+
+    <insert id="insert" parameterType="member">
+        insert into members(email,password, name,created_date, modified_date)
+        values (#{email},#{password},#{name},now(),now())
+    </insert>
+
+    <update id="update" parameterType="map">
+        update members
+        <set>
+            <if test="email != null">email=#{email},</if>
+            <if test="name != null">name=#{name},</if>
+            modified_date=now()
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from members 
+        where id=#{value}
+    </delete>
+
+    <select id="login" parameterType="map" resultMap="memberResultMap">
+        select name, email from members
+        where email=#{email} and password=#{password}
+    </select>
+</mapper>
