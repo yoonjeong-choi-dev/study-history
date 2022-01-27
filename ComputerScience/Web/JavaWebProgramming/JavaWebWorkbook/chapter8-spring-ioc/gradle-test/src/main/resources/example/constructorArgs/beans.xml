@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="score1" class="example.constructorArgs.Score">
+        <constructor-arg>
+            <value type="java.lang.String">타입설정</value>
+        </constructor-arg>
+        <constructor-arg><value type="float">91</value></constructor-arg>
+        <constructor-arg><value type="float">93</value></constructor-arg>
+        <constructor-arg><value type="float">95</value></constructor-arg>
+    </bean>
+
+    <bean id="score2" class="example.constructorArgs.Score">
+        <constructor-arg>
+            <value type="java.lang.String">기본타입설정 x</value>
+        </constructor-arg>
+        <constructor-arg><value>81</value></constructor-arg>
+        <constructor-arg><value>83</value></constructor-arg>
+        <constructor-arg><value>85</value></constructor-arg>
+    </bean>
+
+    <bean id="score3" class="example.constructorArgs.Score">
+        <constructor-arg type="java.lang.String" value="속성설정 with Type"/>
+        <constructor-arg type="float" value="71"/>
+        <constructor-arg type="float" value="73"/>
+        <constructor-arg type="float" value="75"/>
+    </bean>
+
+    <bean id="score4" class="example.constructorArgs.Score">
+        <constructor-arg type="java.lang.String" value="속성설정 without Type"/>
+        <constructor-arg value="61"/>
+        <constructor-arg value="63"/>
+        <constructor-arg value="65"/>
+    </bean>
+
+    <bean id="score5" class="example.constructorArgs.Score">
+        <constructor-arg value="65" index="3"/>
+        <constructor-arg value="61" index="1"/>
+        <constructor-arg value="63" index="2"/>
+        <constructor-arg type="java.lang.String" value="인덱스설정" index="0"/>
+    </bean>
+</beans>

@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+group 'com.yj'
+version '1.0-SNAPSHOT'
+sourceCompatibility=1.8
+
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework:spring-context:4.0.2.RELEASE'
+    implementation group: 'commons-collections', name: 'commons-collections', version: '3.2'
+
+
+    testImplementation group: 'junit', name:'junit', version: '4.+'
+}
+
+test {
+    useJUnitPlatform()
+}

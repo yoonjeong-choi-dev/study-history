@@ -295,6 +295,12 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
+### Gradle ###
+.gradle
+/build/
+.gradletasknamecache
+!gradle-wrapper.jar
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db

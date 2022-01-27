@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="tire1" class="di.factoryMethod.TireFactory" factory-method="createTire">
+        <constructor-arg value="Hankook"/>
+    </bean>
+
+    <bean id="tire2" class="di.factoryMethod.TireFactory" factory-method="createTire">
+        <constructor-arg value="default"/>
+    </bean>
+
+    <bean id="eFactory" class="di.factoryMethod.EngineFactory" />
+
+    <bean id="e1" factory-bean="eFactory" factory-method="createEngine">
+        <constructor-arg value="super"/>
+    </bean>
+
+    <bean id="e2" factory-bean="eFactory" factory-method="createEngine">
+        <constructor-arg value="anything"/>
+    </bean>
+
+    <bean id="beanT1" class="di.factoryMethod.TireFactoryBean">
+        <property name="maker" value="Hankook"/>
+    </bean>
+
+    <bean id="beanT2" class="di.factoryMethod.TireFactoryBean">
+        <property name="maker" value="custom"/>
+    </bean>
+</beans>

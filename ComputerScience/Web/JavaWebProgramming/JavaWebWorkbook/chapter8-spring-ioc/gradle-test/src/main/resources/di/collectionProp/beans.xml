@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="spareTire" class="di.collectionProp.Tire">
+        <property name="maker" value="Hyundai"/>
+        <property name="spec">
+            <props>
+                <prop key="width">205</prop>
+                <prop key="height">25</prop>
+                <prop key="rim.diameter">14</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="myCar" class="di.collectionProp.Car">
+        <constructor-arg value="Avante"/>
+        <constructor-arg>
+            <bean class="di.collectionProp.Engine" p:maker="MyEngine" p:cc="4321"/>
+        </constructor-arg>
+        <property name="tires">
+            <list>
+                <bean class="di.collectionProp.Tire">
+                    <property name="maker" value="Tire1"/>
+                    <property name="spec">
+                        <props>
+                            <prop key="custom">YJ</prop>
+                            <prop key="size">125</prop>
+                        </props>
+                    </property>
+                </bean>
+                <ref bean="spareTire"/>
+            </list>
+        </property>
+        <property name="options">
+            <map>
+                <entry key="airbag" value="dual"/>
+                <entry key="spareTire" value-ref="spareTire"/>
+            </map>
+        </property>
+    </bean>
+
+</beans>
