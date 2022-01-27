@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="mavenBuildRunner" class="com.yj.MavenBuildRunner">
+        <property name="mavenPath">
+            <value>/home/yjchoi/workspace</value>
+        </property>
+    </bean>
+
+    <bean id="sampleProject" class="com.yj.Project">
+        <property name="srcDirs">
+            <list>
+                <value>src/</value>
+                <value>srcResources</value>
+            </list>
+        </property>
+        <property name="binDir" value="bin"/>
+        <property name="buildRunner" ref="mavenBuildRunner"/>
+    </bean>
+</beans>
