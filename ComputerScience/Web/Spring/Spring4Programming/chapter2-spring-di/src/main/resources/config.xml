@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="user1" class="com.yj.auth.User">
+        <constructor-arg value="yjchoi"/>
+        <constructor-arg value="1234"/>
+    </bean>
+
+    <bean id="user2" class="com.yj.auth.User">
+        <constructor-arg value="1111" index="1"/>
+        <constructor-arg value="yoonjeong" index="0"/>
+    </bean>
+
+    <bean id="userRepository" class="com.yj.auth.UserRepository">
+        <property name="users">
+            <list>
+                <ref bean="user1"/>
+                <ref bean="user2"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="changePwService" class="com.yj.auth.PasswordChangeService">
+        <constructor-arg>
+            <ref bean="userRepository"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="authFailLogger" class="com.yj.auth.AuthFailLogger">
+        <property name="threshold" value="5"/>
+    </bean>
+
+    <bean id="authenticationService" class="com.yj.auth.AuthenticationService">
+        <property name="failLogger" ref="authFailLogger"/>
+        <property name="userRepository" ref="userRepository"/>
+    </bean>
+</beans>

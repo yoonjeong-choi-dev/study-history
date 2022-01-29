@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="user1" class="com.yj.auth.User" c:id="yjchoi" c:password="1234"/>
+
+    <bean id="user2" class="com.yj.auth.User" c:id="yoonjeong" c:password="1111"/>
+
+
+    <bean id="userRepository" class="com.yj.auth.UserRepository">
+        <property name="users">
+            <list>
+                <ref bean="user1"/>
+                <ref bean="user2"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="changePwService" class="com.yj.auth.PasswordChangeService" c:userRepository-ref="userRepository"/>
+
+    <bean id="authFailLogger" class="com.yj.auth.AuthFailLogger" p:threshold="5"/>
+
+    <bean id="authenticationService" class="com.yj.auth.AuthenticationService"
+          p:failLogger-ref="authFailLogger" p:userRepository-ref="userRepository"/>
+</beans>

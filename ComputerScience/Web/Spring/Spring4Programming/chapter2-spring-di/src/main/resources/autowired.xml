@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+
+    <bean id="factoryService" class="com.yj.autowired.FactoryService"/>
+
+    <bean id="someFactory" class="com.yj.factory.SearchClientFactoryBean">
+        <property name="server" value="192.168.150.10"/>
+        <property name="port" value="7166"/>
+        <property name="contentType" value="utf-8"/>
+        <property name="encoding" value="application/json"/>
+    </bean>
+
+    <bean id="someUser" class="com.yj.auth.User">
+        <constructor-arg value="yjchoi"/>
+        <constructor-arg value="1234"/>
+    </bean>
+
+    <bean id="anotherUser" class="com.yj.auth.User">
+        <constructor-arg value="yjchoi"/>
+        <constructor-arg value="1234"/>
+    </bean>
+</beans>

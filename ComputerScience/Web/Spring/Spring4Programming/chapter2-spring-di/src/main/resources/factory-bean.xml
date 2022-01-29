@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="factory" class="com.yj.factory.SearchClientFactoryBean">
+        <property name="server" value="192.168.150.10"/>
+        <property name="port" value="7166"/>
+        <property name="contentType" value="utf-8"/>
+        <property name="encoding" value="application/json"/>
+    </bean>
+</beans>
