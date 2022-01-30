@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+        <property name="customEditors">
+            <map>
+                <entry key="com.yj.customProperty.money.Money" value="com.yj.customProperty.money.YjMoneyEditor"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="moneyWrap1" class="com.yj.customProperty.money.MoneyWrapper">
+        <property name="money" value="10000WON"/>
+    </bean>
+
+    <bean id="moneyWrap2" class="com.yj.customProperty.money.MoneyWrapper">
+        <property name="money" value="100USD"/>
+    </bean>
+</beans>
