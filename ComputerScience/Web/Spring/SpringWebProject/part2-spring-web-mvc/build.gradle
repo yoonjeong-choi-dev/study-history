@@ -1,0 +1,39 @@
+plugins {
+    id 'war'
+    id 'java'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group 'com.yj'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation group: 'org.springframework', name: 'spring-context', version: '5.2.19.RELEASE'
+    testImplementation group: 'org.springframework', name: 'spring-test', version: '5.2.19.RELEASE'
+
+    implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.2.19.RELEASE'
+
+    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
+
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+
+    implementation group: 'log4j', name: 'log4j', version: '1.2.17'
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+test {
+    useJUnitPlatform()
+}
