@@ -42,6 +42,7 @@
     - 자바 웹 개발 워크북(JavaWebWorkbook)
   - Spring(Spring)
     - 스프링 입문을 위한 자바 객체지향의 원리와 이해(SpringWithOOP)
+    - 코드로 배우는 스프링 웹 프로젝트(SpringWebProject)
 - 코딩 전략(Coding Strategy)
   - 코딩의 기술
 - 컴퓨터 비전(ComputerVision)
