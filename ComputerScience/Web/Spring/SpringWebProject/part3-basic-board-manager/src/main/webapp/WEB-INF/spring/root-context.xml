@@ -29,4 +29,6 @@
     </bean>
 
     <mybatis-spring:scan base-package="com.yj.mapper"/>
+
+    <context:component-scan base-package="com.yj.service"/>
 </beans>
