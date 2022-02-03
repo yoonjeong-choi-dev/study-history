@@ -1,6 +1,7 @@
 package com.yj.service;
 
 import com.yj.domain.BoardVO;
+import com.yj.domain.PageCriteria;
 import com.yj.mapper.BoardMapper;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -30,6 +31,12 @@ public class BoardServiceImpl implements BoardService {
     public List<BoardVO> getList() {
         return mapper.selectList();
     }
+
+    @Override
+    public List<BoardVO> getList(PageCriteria cri) {
+        return mapper.selectListWithPage(cri);
+    }
+
 
     @Override
     public boolean modify(BoardVO board) {

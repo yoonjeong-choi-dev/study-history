@@ -15,6 +15,18 @@
         select * from board where id = #{id}
     </select>
 
+    <select id="selectListWithPage" resultType="com.yj.domain.BoardVO">
+        <![CDATA[
+        SELECT *
+        FROM
+            (
+                SELECT * from board
+                order by id desc
+                limit ${startRow}, ${numContents}
+            ) list
+        ]]>
+    </select>
+
     <insert id="insert">
         insert into board (title, content, writer)
         values (#{title}, #{content}, #{writer})

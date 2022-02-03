@@ -1,6 +1,7 @@
 package com.yj.controller;
 
 import com.yj.domain.BoardVO;
+import com.yj.domain.PageCriteria;
 import com.yj.service.BoardService;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -21,9 +22,14 @@ public class BoardController {
     @Setter(onMethod_ = @Autowired)
     private BoardService service;
 
-    @GetMapping("/list")
-    public void list(Model model) {
-        model.addAttribute("boardList", service.getList());
+//    @GetMapping("/list")
+//    public void list(Model model) {
+//        model.addAttribute("boardList", service.getList());
+//    }
+
+    @GetMapping
+    public void list(PageCriteria cri, Model model) {
+        model.addAttribute("boardList", service.getList(cri));
     }
 
     @GetMapping("/register")

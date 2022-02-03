@@ -1,6 +1,7 @@
 package com.yj.service;
 
 import com.yj.domain.BoardVO;
+import com.yj.domain.PageCriteria;
 
 import java.util.List;
 
@@ -9,6 +10,7 @@ public interface BoardService {
 
     public BoardVO getById(Long id);
     public List<BoardVO> getList();
+    public List<BoardVO> getList(PageCriteria cri);
 
     public boolean modify(BoardVO board);
 
