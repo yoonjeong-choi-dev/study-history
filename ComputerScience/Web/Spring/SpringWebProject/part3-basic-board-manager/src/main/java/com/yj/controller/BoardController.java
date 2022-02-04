@@ -2,16 +2,14 @@ package com.yj.controller;
 
 import com.yj.domain.BoardVO;
 import com.yj.domain.PageCriteria;
+import com.yj.domain.PageDTO;
 import com.yj.service.BoardService;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -29,7 +27,16 @@ public class BoardController {
 
     @GetMapping
     public void list(PageCriteria cri, Model model) {
+        int totalCount = service.getTotalCount();
+
+        // 현재 페이지에 대한 파라미터 검증
+        if (cri.getNumContents() * cri.getPageNum() > totalCount ) {
+            int maxPageNum = (int) Math.ceil((double) totalCount / (double) cri.getNumContents());
+            cri.setPageNum(maxPageNum);
+        }
+
         model.addAttribute("boardList", service.getList(cri));
+        model.addAttribute("pageMaker", new PageDTO(cri, totalCount));
     }
 
     @GetMapping("/register")
@@ -47,12 +54,12 @@ public class BoardController {
     }
 
     @GetMapping({"/get", "modify"})
-    public void getForm(@RequestParam("id") Long id, Model model) {
+    public void getForm(@RequestParam("id") Long id, @ModelAttribute("cri") PageCriteria cri, Model model) {
         model.addAttribute("board", service.getById(id));
     }
 
     @PostMapping("/modify")
-    public String modify(BoardVO board, RedirectAttributes redirectAttributes) {
+    public String modify(BoardVO board, @ModelAttribute("cri") PageCriteria cri, RedirectAttributes redirectAttributes) {
         String flashMessage = null;
         if (service.modify(board)) {
             flashMessage = "Success to Update";
@@ -61,11 +68,13 @@ public class BoardController {
         }
 
         redirectAttributes.addFlashAttribute("flashMsg", flashMessage);
+        redirectAttributes.addAttribute("pageNum", cri.getPageNum());
+        redirectAttributes.addAttribute("numContents", cri.getNumContents());
         return "redirect:/board/list";
     }
 
     @PostMapping("/remove")
-    public String remove(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
+    public String remove(@RequestParam("id") Long id, @ModelAttribute("cri") PageCriteria cri, RedirectAttributes redirectAttributes) {
         String flashMessage = null;
         if (service.remove(id)) {
             flashMessage = "Success to Delete";
@@ -74,6 +83,8 @@ public class BoardController {
         }
 
         redirectAttributes.addFlashAttribute("flashMsg", flashMessage);
+        redirectAttributes.addAttribute("pageNum", cri.getPageNum());
+        redirectAttributes.addAttribute("numContents", cri.getNumContents());
         return "redirect:/board/list";
     }
 }

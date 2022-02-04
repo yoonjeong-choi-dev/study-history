@@ -9,6 +9,7 @@ public interface BoardMapper {
     public List<BoardVO> selectList();
     public BoardVO selectById(Long id);
     public List<BoardVO> selectListWithPage(PageCriteria cri);
+    public int getTotalCount();
 
     public void insert(BoardVO board);
     public Integer insertWithId(BoardVO board);

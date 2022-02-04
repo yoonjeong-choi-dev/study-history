@@ -17,6 +17,8 @@
       <div class="panel-body">
 
         <form id="modify-form" role="form" action="modify" method="POST">
+          <input type="hidden" name="pageNum" value='<c:out value="${cri.pageNum}"/>'>
+          <input type="hidden" name="numContents" value='<c:out value="${cri.numContents}"/>'>
 
           <div class="form-group">
             <label>Board ID</label>
@@ -79,6 +81,13 @@
                     // self.location = '/board/list';
                     formObj.setAttribute("action", "/board/list");
                     formObj.setAttribute("method","get");
+
+                    let pageNumTag = formObj.querySelector("input[name='pageNum']").cloneNode();
+                    let numContentsTag = formObj.querySelector("input[name='numContents']").cloneNode();
+
+                    formObj.innerHTML = "";
+                    formObj.append(pageNumTag);
+                    formObj.append(numContentsTag);
                 }
 
                 formObj.submit();

@@ -27,6 +27,10 @@
         ]]>
     </select>
 
+    <select id="getTotalCount" resultType="int">
+        select count(*) from board where id > 0
+    </select>
+
     <insert id="insert">
         insert into board (title, content, writer)
         values (#{title}, #{content}, #{writer})

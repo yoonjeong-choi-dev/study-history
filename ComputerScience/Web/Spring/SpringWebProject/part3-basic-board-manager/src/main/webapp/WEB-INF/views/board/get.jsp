@@ -45,6 +45,8 @@
 
         <form id='btnForm' action="/board/modify" method="get">
           <input type='hidden' id='id' name='id' value='<c:out value="${board.id}"/>'>
+          <input type="hidden" name="pageNum" value='<c:out value="${cri.pageNum}"/>'>
+          <input type="hidden" name="numContents" value='<c:out value="${cri.numContents}"/>'>
         </form>
 
       </div>

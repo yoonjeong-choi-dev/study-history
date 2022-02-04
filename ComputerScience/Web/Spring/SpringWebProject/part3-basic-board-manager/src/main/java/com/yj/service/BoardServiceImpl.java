@@ -37,6 +37,10 @@ public class BoardServiceImpl implements BoardService {
         return mapper.selectListWithPage(cri);
     }
 
+    @Override
+    public int getTotalCount() {
+        return mapper.getTotalCount();
+    }
 
     @Override
     public boolean modify(BoardVO board) {

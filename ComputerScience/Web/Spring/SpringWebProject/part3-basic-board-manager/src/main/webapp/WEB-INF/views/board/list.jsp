@@ -19,6 +19,7 @@
         <button id='regBtn' type="button" class="btn btn-xs pull-right">Register
           New Board</button>
       </div>
+
       <div class="panel-body">
         <table class="table table-striped table-bordered table-hover">
           <thead>
@@ -34,9 +35,12 @@
           <c:forEach var="board" items="${boardList}">
             <tr>
               <td><c:out value="${board.id}" /> </td>
-              <td><a href='/board/get?id=<c:out value="${board.id}"/>'>
-                  <c:out value="${board.title}" /> </td>
-              </a>
+              <td>
+<%--                <a href='/board/get?id=<c:out value="${board.id}"/>'><c:out value="${board.title}" /></a>--%>
+                    <a class="moveInfo" href='<c:out value="${board.id}"/>'>
+                      <c:out value="${board.title}"/>
+                    </a>
+              </td>
 
               <td><c:out value="${board.writer}" /> </td>
               <td><fmt:formatDate value="${board.registeredDate}" pattern="yyyy-MM-dd"/></td>
@@ -44,6 +48,30 @@
             </tr>
           </c:forEach>
         </table>
+
+        <!-- Pagination -->
+        <div class="pull-right">
+          <ul class="pagination">
+            <c:if test="${pageMaker.prev}">
+              <li class="paginate_button previous"><a href="${pageMaker.startPage - 1}">Previous</a></li>
+            </c:if>
+
+            <c:forEach var="num" begin="${pageMaker.startPage}" end="${pageMaker.endPage}">
+              <li class="paginate_button ${pageMaker.cri.pageNum == num ? "active" : ""}">
+                <a href="${num}">${num}</a>
+              </li>
+            </c:forEach>
+
+            <c:if test="${pageMaker.next}">
+              <li class="paginate_button next"><a href="${pageMaker.endPage + 1}">Next</a></li>
+            </c:if>
+          </ul>
+        </div>
+
+        <form id="actionForm" action="/board/list" method="get">
+          <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
+          <input type="hidden" name="numContents" value="${pageMaker.cri.numContents}">
+        </form>
 
         <!-- Modal  추가 -->
         <div id="flashMsgModal" class="modal fade" tabindex="-1" role="dialog"
@@ -89,6 +117,34 @@
         $("#flashMsgModal").modal("show");
     }
 
+    function disablePageATag(actionForm) {
+
+
+      let aTags = document.querySelectorAll(".paginate_button a");
+      aTags.forEach(aTag => {
+          aTag.addEventListener("click", (e) => {
+              e.preventDefault();
+
+              actionForm.querySelector("input[name='pageNum']").value = aTag.getAttribute("href");
+              actionForm.submit();
+          })
+      })
+    }
+
+    function onClickTitle(actionForm) {
+        let titles = document.querySelectorAll(".moveInfo");
+        titles.forEach(title => {
+            title.addEventListener("click", (e) => {
+                e.preventDefault();
+
+                actionForm.innerHTML += "<input type='hidden' name='id' value='" + title.getAttribute("href") + "'>";
+                actionForm.setAttribute("action", "/board/get");
+                actionForm.setAttribute("method","get");
+                actionForm.submit();
+            })
+        })
+    }
+
     document.addEventListener("DOMContentLoaded", function(){
         let flashMsg = '<c:out value="${flashMsg}"/>';
         checkFlashMsg(flashMsg);
@@ -97,6 +153,10 @@
         history.replaceState({}, null, null);
 
         onClickRegister();
+
+        let actionForm = document.getElementById("actionForm");
+        disablePageATag(actionForm);
+        onClickTitle(actionForm);
     });
 
 </script>
