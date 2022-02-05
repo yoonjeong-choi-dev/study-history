@@ -19,6 +19,23 @@
   * 테스트 과정에서 서블릿을 로드할 수 없는 문제 발생
 * build.gradle 파일에서 testImplementation 에 서블릿 의존성 추가
 
+### 뒤로가기 문제
+* 현재 상황
+  * a 태그의 링크를 막아두고, form 태그(actionForm)를 이용하여 특정 url로 이동하는 방식
+  * 이때 actionForm 의 method 및 action 속성을 변경
+  * 뒤로가기를 하면, form 태그의 속성이 유지
+* 버그 발생 시나리오
+  * 특정 게시글로 이동
+  * actionForm 태그의 method 속성이 `/board/get` 으로 변경
+  * 뒤로가기를 했을 때 actionForm 태그의 method 속성이 `/board/get` 유지
+  * 페이지 이동 a 태그 클릭
+    * actionForm 태그의 method 속성이 `/board/get`
+    * 페이지 이동이 아닌 뒤로가기 직전 페이지로 이동
+* 해결 방법
+  * form 태그 자체는 서버 요청 시 필요한 데이터들을 유지하기 위한 것
+  * form 태그를 사용하는 인터렉션들에 대해서 모두 method 및 action 속성을 변경
+  * html 에서의 form 태그에는 method 및 action 속성을 제거
+
 
 ## Chapter 7. 스프링 MVC 프로젝트 기본 구조
 ### 웹 프로젝트의 3 티어 방식

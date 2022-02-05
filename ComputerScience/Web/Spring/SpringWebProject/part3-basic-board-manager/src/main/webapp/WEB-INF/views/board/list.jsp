@@ -101,7 +101,7 @@
 
         <!-- 게시글 링크 및 페이지네이션에 대한 데이터 : 페이지 및 검색 정보-->
         <!-- c:out 사용 : xss 방지 -->
-        <form id="actionForm" action="/board/list" method="get">
+        <form id="actionForm">
           <input type="hidden" name="pageNum" value='<c:out value="${pageMaker.cri.pageNum}"/>'>
           <input type="hidden" name="numContents" value='<c:out value="${pageMaker.cri.numContents}"/>'>
           <input type="hidden" name="type" value='<c:out value="${pageMaker.cri.type}"/>'>
@@ -120,7 +120,6 @@
               <div id="flash-message-body" class="modal-body">처리가 완료되었습니다.</div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <%--                <button type="button" class="btn btn-primary">Save changes</button>--%>
               </div>
             </div>
           </div>
@@ -149,13 +148,15 @@
         $("#flashMsgModal").modal("show");
     }
 
-    function disablePageATag(actionForm) {
+    function onClickPage(actionForm) {
         let aTags = document.querySelectorAll(".paginate_button a");
         aTags.forEach(aTag => {
             aTag.addEventListener("click", (e) => {
                 e.preventDefault();
 
                 actionForm.querySelector("input[name='pageNum']").value = aTag.getAttribute("href");
+                // actionForm.setAttribute("action", "/board/list");
+                // actionForm.setAttribute("method", "get");
                 actionForm.submit();
             })
         })
@@ -208,7 +209,7 @@
         onClickRegister();
 
         let actionForm = document.getElementById("actionForm");
-        disablePageATag(actionForm);
+        onClickPage(actionForm);
         onClickTitle(actionForm);
 
         onSearch();
