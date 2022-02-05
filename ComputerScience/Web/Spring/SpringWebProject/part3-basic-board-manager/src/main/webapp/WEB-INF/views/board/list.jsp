@@ -17,7 +17,8 @@
       <div class="panel-heading">
         Board List Page
         <button id='regBtn' type="button" class="btn btn-xs pull-right">Register
-          New Board</button>
+          New Board
+        </button>
       </div>
 
       <div class="panel-body">
@@ -34,20 +35,50 @@
 
           <c:forEach var="board" items="${boardList}">
             <tr>
-              <td><c:out value="${board.id}" /> </td>
+              <td><c:out value="${board.id}"/></td>
               <td>
-<%--                <a href='/board/get?id=<c:out value="${board.id}"/>'><c:out value="${board.title}" /></a>--%>
-                    <a class="moveInfo" href='<c:out value="${board.id}"/>'>
-                      <c:out value="${board.title}"/>
-                    </a>
+                  <%--                <a href='/board/get?id=<c:out value="${board.id}"/>'><c:out value="${board.title}" /></a>--%>
+                <a class="moveInfo" href='<c:out value="${board.id}"/>'>
+                  <c:out value="${board.title}"/>
+                </a>
               </td>
 
-              <td><c:out value="${board.writer}" /> </td>
+              <td><c:out value="${board.writer}"/></td>
               <td><fmt:formatDate value="${board.registeredDate}" pattern="yyyy-MM-dd"/></td>
               <td><fmt:formatDate value="${board.modifiedDate}" pattern="yyyy-MM-dd"/></td>
             </tr>
           </c:forEach>
         </table>
+
+        <!-- Search -->
+        <div class="row">
+          <div class="col-lg-12">
+
+            <form id='searchForm' action="/board/list" method='get'>
+              <div class="col-xs-2">
+                <select name="type"  class="form-control">
+                  <option value="" <c:out value="${pageMaker.cri.type == null?'selected':''}"/>>---</option>
+                  <option value="T" <c:out value="${pageMaker.cri.type eq 'T'?'selected':''}"/>>제목</option>
+                  <option value="C" <c:out value="${pageMaker.cri.type eq 'C'?'selected':''}"/>>내용</option>
+                  <option value="W" <c:out value="${pageMaker.cri.type eq 'W'?'selected':''}"/>>작성자</option>
+                  <option value="TC" <c:out value="${pageMaker.cri.type eq 'TC'?'selected':''}"/>>제목 or 내용</option>
+                  <option value="TW" <c:out value="${pageMaker.cri.type eq 'TW'?'selected':''}"/>>제목 or 작성자</option>
+                  <option value="TWC" <c:out value="${pageMaker.cri.type eq 'TWC'?'selected':''}"/>>제목 or 내용 or 작성자</option>
+                </select>
+              </div>
+
+              <!-- 검색 폼에 대한 데이터 -->
+              <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
+              <input type="hidden" name="numContents" value="${pageMaker.cri.numContents}">
+              <div class="col-xs-3">
+                <input type='text' class="form-control" name='keyword'  value='<c:out value="${pageMaker.cri.keyword}"/>'/>
+              </div>
+              <div class="input-group-append">
+                <button class='btn btn-default'>Search</button>
+              </div>
+            </form>
+          </div>
+        </div>
 
         <!-- Pagination -->
         <div class="pull-right">
@@ -68,9 +99,13 @@
           </ul>
         </div>
 
+        <!-- 게시글 링크 및 페이지네이션에 대한 데이터 : 페이지 및 검색 정보-->
+        <!-- c:out 사용 : xss 방지 -->
         <form id="actionForm" action="/board/list" method="get">
-          <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
-          <input type="hidden" name="numContents" value="${pageMaker.cri.numContents}">
+          <input type="hidden" name="pageNum" value='<c:out value="${pageMaker.cri.pageNum}"/>'>
+          <input type="hidden" name="numContents" value='<c:out value="${pageMaker.cri.numContents}"/>'>
+          <input type="hidden" name="type" value='<c:out value="${pageMaker.cri.type}"/>'>
+          <input type="hidden" name="keyword" value='<c:out value="${pageMaker.cri.keyword}"/>'>
         </form>
 
         <!-- Modal  추가 -->
@@ -85,7 +120,7 @@
               <div id="flash-message-body" class="modal-body">처리가 완료되었습니다.</div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-<%--                <button type="button" class="btn btn-primary">Save changes</button>--%>
+                <%--                <button type="button" class="btn btn-primary">Save changes</button>--%>
               </div>
             </div>
           </div>
@@ -109,26 +144,21 @@
         if (result === '' || history.state) {
             return;
         }
-
-        if (parseInt(result) > 0) {
-            document.getElementById("flash-message-body").innerHTML = "게시글 " + parseInt(result) + " 번이 등록되었습니다.";
-        }
+        document.getElementById("flash-message-body").innerHTML = result;
 
         $("#flashMsgModal").modal("show");
     }
 
     function disablePageATag(actionForm) {
+        let aTags = document.querySelectorAll(".paginate_button a");
+        aTags.forEach(aTag => {
+            aTag.addEventListener("click", (e) => {
+                e.preventDefault();
 
-
-      let aTags = document.querySelectorAll(".paginate_button a");
-      aTags.forEach(aTag => {
-          aTag.addEventListener("click", (e) => {
-              e.preventDefault();
-
-              actionForm.querySelector("input[name='pageNum']").value = aTag.getAttribute("href");
-              actionForm.submit();
-          })
-      })
+                actionForm.querySelector("input[name='pageNum']").value = aTag.getAttribute("href");
+                actionForm.submit();
+            })
+        })
     }
 
     function onClickTitle(actionForm) {
@@ -139,13 +169,36 @@
 
                 actionForm.innerHTML += "<input type='hidden' name='id' value='" + title.getAttribute("href") + "'>";
                 actionForm.setAttribute("action", "/board/get");
-                actionForm.setAttribute("method","get");
+                actionForm.setAttribute("method", "get");
                 actionForm.submit();
-            })
-        })
+            });
+        });
     }
 
-    document.addEventListener("DOMContentLoaded", function(){
+    function onSearch() {
+        let searchForm = document.getElementById("searchForm");
+        let select = searchForm.querySelector("select");
+        let searchBtn = searchForm.querySelector("button");
+
+        searchBtn.addEventListener("click", (e) => {
+            if(!select.value) {
+                alert("검색 종류를 선택하세요!");
+                return;
+            }
+            if(!searchForm.querySelector("input[name='keyword']").value) {
+                alert("검색어를 입력하세요");
+                return;
+            }
+
+            searchForm.querySelector("input[name='pageNum']").value = "1";
+
+            e.preventDefault();
+            searchForm.submit();
+        });
+
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
         let flashMsg = '<c:out value="${flashMsg}"/>';
         checkFlashMsg(flashMsg);
 
@@ -157,6 +210,8 @@
         let actionForm = document.getElementById("actionForm");
         disablePageATag(actionForm);
         onClickTitle(actionForm);
+
+        onSearch();
     });
 
 </script>

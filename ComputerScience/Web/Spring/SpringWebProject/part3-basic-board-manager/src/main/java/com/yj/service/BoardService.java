@@ -11,7 +11,7 @@ public interface BoardService {
     public BoardVO getById(Long id);
     public List<BoardVO> getList();
     public List<BoardVO> getList(PageCriteria cri);
-    public int getTotalCount();
+    public int getTotalCount(PageCriteria cri);
 
     public boolean modify(BoardVO board);
 

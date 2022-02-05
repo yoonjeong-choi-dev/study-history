@@ -47,6 +47,10 @@
           <input type='hidden' id='id' name='id' value='<c:out value="${board.id}"/>'>
           <input type="hidden" name="pageNum" value='<c:out value="${cri.pageNum}"/>'>
           <input type="hidden" name="numContents" value='<c:out value="${cri.numContents}"/>'>
+
+          <!-- 검색을 통해 진입한 경우, 검색에 대한 정보 저장 필요 -->
+          <input type="hidden" name="type" value='<c:out value="${cri.type}"/>'>
+          <input type="hidden" name="keyword" value='<c:out value="${cri.keyword}"/>'>
         </form>
 
       </div>

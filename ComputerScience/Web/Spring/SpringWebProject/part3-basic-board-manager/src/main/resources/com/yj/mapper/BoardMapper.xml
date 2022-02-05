@@ -5,6 +5,26 @@
 
 <mapper namespace="com.yj.mapper.BoardMapper">
 
+    <sql id="searchCriteria">
+        <trim prefix="where(" suffix=") " prefixOverrides="or">
+            <foreach collection="typeArr" item="type">
+                <trim prefix="or">
+                    <choose>
+                        <when test="type == 'T'.toString()">
+                            title like concat('%',#{keyword},'%')
+                        </when>
+                        <when test="type == 'C'.toString()">
+                            content like concat('%',#{keyword},'%')
+                        </when>
+                        <when test="type == 'W'.toString()">
+                            writer like concat('%',#{keyword},'%')
+                        </when>
+                    </choose>
+                </trim>
+            </foreach>
+        </trim>
+    </sql>
+
     <select id="selectList" resultType="com.yj.domain.BoardVO">
         <![CDATA[
             select * from board where id > 0
@@ -17,18 +37,33 @@
 
     <select id="selectListWithPage" resultType="com.yj.domain.BoardVO">
         <![CDATA[
-        SELECT *
-        FROM
+        select *
+        from
             (
-                SELECT * from board
-                order by id desc
-                limit ${startRow}, ${numContents}
+                select * from board
+            ]]>
+        <include refid="searchCriteria"></include>
+        <![CDATA[
+                order by id desc limit ${startRow}, ${numContents}
             ) list
         ]]>
     </select>
 
+<!--    <select id="selectListWithPage" resultType="com.yj.domain.BoardVO">-->
+<!--        <![CDATA[-->
+<!--        SELECT *-->
+<!--        FROM-->
+<!--            (-->
+<!--                SELECT * from board-->
+<!--                order by id desc-->
+<!--                limit ${startRow}, ${numContents}-->
+<!--            ) list-->
+<!--        ]]>-->
+<!--    </select>-->
+
     <select id="getTotalCount" resultType="int">
-        select count(*) from board where id > 0
+        select count(*) from board
+        <include refid="searchCriteria"></include>
     </select>
 
     <insert id="insert">

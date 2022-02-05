@@ -19,6 +19,8 @@
         <form id="modify-form" role="form" action="modify" method="POST">
           <input type="hidden" name="pageNum" value='<c:out value="${cri.pageNum}"/>'>
           <input type="hidden" name="numContents" value='<c:out value="${cri.numContents}"/>'>
+          <input type="hidden" name="type" value='<c:out value="${cri.type}"/>'>
+          <input type="hidden" name="keyword" value='<c:out value="${cri.keyword}"/>'>
 
           <div class="form-group">
             <label>Board ID</label>
@@ -84,10 +86,14 @@
 
                     let pageNumTag = formObj.querySelector("input[name='pageNum']").cloneNode();
                     let numContentsTag = formObj.querySelector("input[name='numContents']").cloneNode();
+                    let keywordTag = formObj.querySelector("input[name='keyword']").cloneNode();
+                    let typeTag = formObj.querySelector("input[name='type']").cloneNode();
 
                     formObj.innerHTML = "";
                     formObj.append(pageNumTag);
                     formObj.append(numContentsTag);
+                    formObj.append(keywordTag);
+                    formObj.append(typeTag);
                 }
 
                 formObj.submit();

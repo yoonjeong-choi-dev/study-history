@@ -27,12 +27,12 @@ public class BoardController {
 
     @GetMapping
     public void list(PageCriteria cri, Model model) {
-        int totalCount = service.getTotalCount();
+        int totalCount = service.getTotalCount(cri);
 
         // 현재 페이지에 대한 파라미터 검증
         if (cri.getNumContents() * cri.getPageNum() > totalCount ) {
             int maxPageNum = (int) Math.ceil((double) totalCount / (double) cri.getNumContents());
-            cri.setPageNum(maxPageNum);
+            cri.setPageNum(maxPageNum == 0? 1 : maxPageNum);
         }
 
         model.addAttribute("boardList", service.getList(cri));
@@ -47,7 +47,7 @@ public class BoardController {
         service.register(board);
 
         // 플래시 메시지 추가
-        redirectAttributes.addFlashAttribute("flashMsg", board.getId());
+        redirectAttributes.addFlashAttribute("flashMsg", "게시글 " + board.getId() + " 번이 등록되었습니다.");
 
         // 리스트로 리다이렉트
         return "redirect:/board/list";
@@ -68,9 +68,11 @@ public class BoardController {
         }
 
         redirectAttributes.addFlashAttribute("flashMsg", flashMessage);
-        redirectAttributes.addAttribute("pageNum", cri.getPageNum());
-        redirectAttributes.addAttribute("numContents", cri.getNumContents());
-        return "redirect:/board/list";
+//        redirectAttributes.addAttribute("pageNum", cri.getPageNum());
+//        redirectAttributes.addAttribute("numContents", cri.getNumContents());
+//        redirectAttributes.addAttribute("type", cri.getType());
+//        redirectAttributes.addAttribute("keyword", cri.getKeyword());
+        return "redirect:/board/list" + cri.getListLink();
     }
 
     @PostMapping("/remove")
@@ -83,8 +85,10 @@ public class BoardController {
         }
 
         redirectAttributes.addFlashAttribute("flashMsg", flashMessage);
-        redirectAttributes.addAttribute("pageNum", cri.getPageNum());
-        redirectAttributes.addAttribute("numContents", cri.getNumContents());
-        return "redirect:/board/list";
+//        redirectAttributes.addAttribute("pageNum", cri.getPageNum());
+//        redirectAttributes.addAttribute("numContents", cri.getNumContents());
+//        redirectAttributes.addAttribute("type", cri.getType());
+//        redirectAttributes.addAttribute("keyword", cri.getKeyword());
+        return "redirect:/board/list" + cri.getListLink();
     }
 }
