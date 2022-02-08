@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+       http://mybatis.org/schema/mybatis-spring https://mybatis.org/schema/mybatis-spring.xsd http://www.springframework.org/schema/aop
+       https://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+    <!-- Hikari Config  -->
+    <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+        <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"/>
+        <property name="jdbcUrl"
+                  value="jdbc:log4jdbc:mysql://localhost:3306/spring5web?useUnicode=true&amp;characterEncoding=utf8"/>
+        <property name="username" value="spring5webuser"/>
+        <property name="password" value="spring5webuser"/>
+    </bean>
+
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <constructor-arg ref="hikariConfig"/>
+    </bean>
+
+    <!-- myBatis Config -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:/mybatis-config.xml"/>
+    </bean>
+
+    <!-- transaction -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:annotation-driven/>
+
+    <mybatis-spring:scan base-package="com.yj.mapper"/>
+    <mybatis-spring:scan base-package="com.yj.simpleTx.mapper"/>
+
+    <context:component-scan base-package="com.yj.service"/>
+
+    <!-- Simple example -->
+    <context:component-scan base-package="com.yj.simpleAop"/>
+
+    <!-- Transaction example -->
+    <context:component-scan base-package="com.yj.simpleTx"/>
+
+    <!-- auto-proxy for AOP -->
+    <aop:aspectj-autoproxy/>
+
+</beans>

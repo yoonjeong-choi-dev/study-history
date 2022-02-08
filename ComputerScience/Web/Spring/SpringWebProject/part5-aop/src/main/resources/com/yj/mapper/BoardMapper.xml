@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yj.mapper.BoardMapper">
+
+    <sql id="searchCriteria">
+        <trim prefix="where(" suffix=") " prefixOverrides="or">
+            <foreach collection="typeArr" item="type">
+                <trim prefix="or">
+                    <choose>
+                        <when test="type == 'T'.toString()">
+                            title like concat('%',#{keyword},'%')
+                        </when>
+                        <when test="type == 'C'.toString()">
+                            content like concat('%',#{keyword},'%')
+                        </when>
+                        <when test="type == 'W'.toString()">
+                            writer like concat('%',#{keyword},'%')
+                        </when>
+                    </choose>
+                </trim>
+            </foreach>
+        </trim>
+    </sql>
+
+    <select id="selectList" resultType="com.yj.domain.BoardVO">
+        <![CDATA[
+            select * from board where id > 0
+        ]]>
+    </select>
+
+    <select id="selectById" resultType="com.yj.domain.BoardVO">
+        select * from board where id = #{id}
+    </select>
+
+    <select id="selectListWithPage" resultType="com.yj.domain.BoardVO">
+        <![CDATA[
+        select *
+        from
+            (
+                select * from board
+            ]]>
+        <include refid="searchCriteria"/>
+        <![CDATA[
+                order by id desc limit ${startRow}, ${numContents}
+            ) list
+        ]]>
+    </select>
+
+    <select id="getTotalCount" resultType="int">
+        select count(*) from board
+        <include refid="searchCriteria"/>
+    </select>
+
+    <insert id="insert">
+        insert into board (title, content, writer)
+        values (#{title}, #{content}, #{writer})
+    </insert>
+
+    <insert id="insertWithId">
+        <selectKey keyProperty="id" order="BEFORE" resultType="long">
+            select max(id)+1 from board
+        </selectKey>
+
+        insert into board (title, content, writer)
+        values (#{title}, #{content}, #{writer})
+    </insert>
+
+    <update id="update">
+        update board
+        set title=#{title}, content=#{content}, writer=#{writer}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from board where id= #{id}
+    </delete>
+
+    <update id="updateReplyCount">
+        update board set reply_count = reply_count + #{diff} where id=#{id}
+    </update>
+
+</mapper>
