@@ -78,8 +78,4 @@
         delete from board where id= #{id}
     </delete>
 
-    <update id="updateReplyCount">
-        update board set reply_count = reply_count + #{diff} where id=#{id}
-    </update>
-
 </mapper>

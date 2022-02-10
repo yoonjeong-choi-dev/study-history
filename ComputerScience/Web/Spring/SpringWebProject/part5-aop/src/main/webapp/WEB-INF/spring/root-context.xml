@@ -3,15 +3,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
        https://www.springframework.org/schema/context/spring-context.xsd
-       http://mybatis.org/schema/mybatis-spring https://mybatis.org/schema/mybatis-spring.xsd http://www.springframework.org/schema/aop
-       https://www.springframework.org/schema/aop/spring-aop.xsd
-        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+       http://mybatis.org/schema/mybatis-spring https://mybatis.org/schema/mybatis-spring.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!-- Hikari Config  -->
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
@@ -32,25 +29,25 @@
         <property name="configLocation" value="classpath:/mybatis-config.xml"/>
     </bean>
 
-    <!-- transaction -->
+    <!-- transcation bean -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
+    <!-- transaction annotation scan -->
     <tx:annotation-driven/>
 
     <mybatis-spring:scan base-package="com.yj.mapper"/>
-    <mybatis-spring:scan base-package="com.yj.simpleTx.mapper"/>
 
     <context:component-scan base-package="com.yj.service"/>
 
-    <!-- Simple example -->
+    <!-- simple AOP -->
     <context:component-scan base-package="com.yj.simpleAop"/>
 
-    <!-- Transaction example -->
-    <context:component-scan base-package="com.yj.simpleTx"/>
-
-    <!-- auto-proxy for AOP -->
+    <!-- AOP Auto Proxy -->
     <aop:aspectj-autoproxy/>
 
+    <!-- Simple Transaction -->
+    <mybatis-spring:scan base-package="com.yj.simpleTx.mapper"/>
+    <context:component-scan base-package="com.yj.simpleTx"/>
 </beans>

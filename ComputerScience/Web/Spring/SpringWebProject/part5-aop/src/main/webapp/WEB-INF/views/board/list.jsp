@@ -38,7 +38,7 @@
               <td><c:out value="${board.id}"/></td>
               <td>
                 <a class="moveInfo" href='<c:out value="${board.id}"/>'>
-                  <c:out value="${board.title}"/>  <strong>[ <c:out value="${board.replyCount}"/> ]</strong>
+                  <c:out value="${board.title}"/>
                 </a>
               </td>
 
