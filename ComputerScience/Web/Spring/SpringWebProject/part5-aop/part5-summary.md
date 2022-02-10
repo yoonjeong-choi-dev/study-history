@@ -148,3 +148,29 @@
     * 트랜잭션을 관리하는 빈 객체 추가
     * 트랜잭션 어노테이션 스캔 설정
 * 테스트 코드 작성
+
+
+## Chapter 20. 댓글 수 트랜잭션 처리
+* 게시판 테이블 수정
+  * 반정규화를 통해 게시판 테이블에 해당 게시판의 전체 댓글 수 필드 추가
+  * 테이블 변경 쿼리
+    ```
+    alter table board
+    add (reply_count integer default 0);
+    ```
+  * 기존 데이터 댓글 수 처리
+    ```
+    update board
+    set reply_count = (
+      select count(*)
+      from reply
+      where board.id = reply.board_id
+    );
+    ```
+* 게시판 관련 데이터 VO 및 Mapper 수정
+  * 댓글 수 필드 수정 시, modified_date 필드 함께 수정 필요
+    * 해당 필드는 `default CURRENT_TIMESTAMP ON UPDATE` 디폴트가 걸려있어서 수정 시 게시판 수정 시간이 변경
+    * 댓글 자체는 게시판 수정과 관련이 없으므로 해당 필드는 예전처럼 유지 필요
+* 댓글 서비스 구현체 수정
+  * 게시판 Mapper 의존성 주입
+  * 댓글 생성 및 삭제에서 게시판 테이블 데이터 수정

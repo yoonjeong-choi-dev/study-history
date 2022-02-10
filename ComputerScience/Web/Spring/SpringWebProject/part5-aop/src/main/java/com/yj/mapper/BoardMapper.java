@@ -2,6 +2,7 @@ package com.yj.mapper;
 
 import com.yj.domain.BoardVO;
 import com.yj.domain.PageCriteria;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface BoardMapper {
     public int update(BoardVO board);
 
     public int delete(Long id);
+
+    public void updateReplyCount(@Param("id") Long id, @Param("diff") int diff);
 }

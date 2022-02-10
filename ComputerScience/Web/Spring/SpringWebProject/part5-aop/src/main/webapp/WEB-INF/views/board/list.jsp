@@ -39,6 +39,7 @@
               <td>
                 <a class="moveInfo" href='<c:out value="${board.id}"/>'>
                   <c:out value="${board.title}"/>
+                  <stong>[ <c:out value="${board.replyCount}"/> ]</stong>
                 </a>
               </td>
 
