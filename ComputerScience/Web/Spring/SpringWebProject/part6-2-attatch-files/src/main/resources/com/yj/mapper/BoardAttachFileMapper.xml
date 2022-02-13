@@ -11,12 +11,20 @@
     </insert>
 
     <select id="selectByBoardId" resultType="com.yj.domain.BoardAttachFileVO">
-        select * from reply where board_id = #{id}
+        select * from attach_file where board_id = #{id}
     </select>
 
 
     <delete id="delete">
         delete from attach_file where uuid=#{uuid}
     </delete>
+
+    <delete id="deleteByBoardId">
+        delete from attach_file where board_id=#{boardId}
+    </delete>
+
+    <select id="getOldFiles" resultType="com.yj.domain.BoardAttachFileVO">
+        select * from attach_file where upload_path = date_format(date_sub(now(), interval 1 day), '%Y/%m/%d');
+    </select>
 
 </mapper>

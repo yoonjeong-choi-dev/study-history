@@ -32,7 +32,11 @@ import java.util.UUID;
 @Log4j
 @RequestMapping("/upload/*")
 public class UploadController {
-    final String uploadPath = "/home/yjchoi/local-tmp/spring/board/uploads";
+    static final String uploadPath = "/home/yjchoi/local-tmp/spring/board/uploads";
+
+    public static String getUploadPath() {
+        return uploadPath;
+    }
 
     @PostMapping(value = "/", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody

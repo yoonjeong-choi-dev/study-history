@@ -103,42 +103,27 @@
         let formObj = $("form[role='form']");
 
         $("button[type='submit']").on("click", function(e){
-
             e.preventDefault();
 
-            const payload = {
-                title: $("input[name='title']").val(),
-                content: $("textarea[name='content']").val(),
-                writer: $("input[name='writer']").val(),
-                attachFileList: []
-            }
-
+            const paramList = ['fileName', 'uploadPath', 'uuid']
             $("#uploadResult ul li").each(function(i, file){
-                payload.attachFileList.push({
-                    fileName:  file.dataset.fileName,
-                    uploadPath: file.dataset.uploadPath,
-                    uuid: file.dataset.uuid,
-                    isImage: parseInt(file.dataset.isImage),
+
+                paramList.forEach(param => {
+                    let input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = `attachFileList[\${i}].\${param}`;
+                    input.value = file.dataset[param];
+                    formObj.append(input);
                 });
 
+                let input = document.createElement('input');
+                input.type='number';
+                input.name = `attachFileList[\${i}].isImage`;
+                input.value = file.dataset.isImage;
+                formObj.append(input);
             });
 
-            fetch('/board/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8',
-                    redirect: 'follow'
-                },
-                body: JSON.stringify(payload)
-            }).then(response => {
-                console.log(response);
-               if(response.redirected) {
-                   //window.location.href = response.url;
-               }
-            }).catch(e => {
-                console.error(e);
-            })
-
+            formObj.submit();
         });
 
         // File Upload Layout
@@ -148,7 +133,6 @@
     function addClickEventUploadBtn() {
         const uploadInput = document.getElementById('uploadInputs');
         uploadInput.addEventListener('change', (e) => {
-            console.log('change?');
             let formData = new FormData();
 
             let files = document.getElementById('uploadInputs').files;
@@ -194,8 +178,6 @@
     }
 
     function showUploadResult(result) {
-
-        uploadResultDiv.innerHTML = '';
 
         result.forEach(data => {
             let li = document.createElement('li');

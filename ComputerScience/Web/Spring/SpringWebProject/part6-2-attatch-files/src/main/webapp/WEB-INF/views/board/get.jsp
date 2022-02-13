@@ -4,6 +4,57 @@
 
 <%@include file="../includes/header.jsp" %>
 
+<style>
+    #uploadResult {
+        width: 100%;
+        background-color: gray;
+    }
+
+    #uploadResult ul {
+        display: flex;
+        flex-flow: row;
+        justify-content: left;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    #uploadResult ul li {
+        list-style: none;
+        padding: 10px;
+    }
+
+    #uploadResult ul li img {
+        width: 100px;
+        display: block;
+        cursor: pointer;
+    }
+
+    #bigPictureWrapper {
+        position: absolute;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        top: 120px;
+        width: 80%;
+        height: 100%;
+
+        background:rgba(255,255,255,0.8);
+        z-index: 100;
+    }
+
+    #bigPicture {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #bigPicture img {
+        width: 600px;
+    }
+
+</style>
+
 <div class="row">
   <div class="col-lg-12">
     <h1 class="page-header">Board Detail</h1>
@@ -49,6 +100,29 @@
           <input type="hidden" name="type" value='<c:out value="${cri.type}"/>'>
           <input type="hidden" name="keyword" value='<c:out value="${cri.keyword}"/>'>
         </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Attach File Layout -->
+<div id='bigPictureWrapper'>
+  <div id='bigPicture'>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">Files</div>
+      <div class="panel-body">
+
+        <div id="uploadResult">
+          <ul>
+
+          </ul>
+        </div>
 
       </div>
     </div>
@@ -133,12 +207,15 @@
         addBoardEvent();
 
         fetchReplies();
+        fetchAttachFiles();
 
         // 모달 버튼 이벤트
         addModalButtonEvent();
 
         // 댓글 입력 모달
         onClickRegisterButton();
+
+        hideOriginImageDiv();
     });
 
     function addBoardEvent() {
@@ -359,78 +436,85 @@
 
     }
 
-</script>
-
-<script type="text/javascript">
-    //console.log("Test Register");
-    //registerTest();
-    //listTest();
-    //removeTest();
-    //updateTest();
-    //getTest();
-
-    function textResultCallback(result) {
-        alert('Result : ' + result);
+    function fetchAttachFiles() {
+        fetch(`/board/getAttachList?boardId=\${boardId}`)
+            .then(res => res.json())
+            .then(res => {
+                console.log(res);
+                showUploadResult(res);
+            })
+            .catch(err => {
+                console.error(err);
+            });
     }
 
-    function errorAlert(e) {
-        alert('Error : ' + e);
+    function showUploadResult(result) {
+        let uploadResultDiv = document.querySelector('#uploadResult ul');
+
+        result.forEach(data => {
+            let li = document.createElement('li');
+            li.dataset.uploadPath = data.uploadPath;
+            li.dataset.uuid = data.uuid;
+            li.dataset.fileName = data.fileName;
+            li.dataset.isImage = data.isImage;
+            uploadResultDiv.appendChild(li);
+
+            let mainDiv = document.createElement('div');
+            li.appendChild(mainDiv);
+            mainDiv.appendChild(document.createElement('br'));
+
+            let title = document.createElement('span');
+            title.innerHTML = data.fileName;
+            mainDiv.appendChild(title);
+
+
+            // 데이터에 대한 이미지 추가
+            let img = document.createElement('img');
+            let filePath, imgSrc;
+            if (data.isImage === 1) {
+                filePath = encodeURIComponent(data.uploadPath + '/s_' + data.uuid + '_' + data.fileName);
+                imgSrc = '../upload/display?fileName=' + filePath;
+                li.appendChild(img);
+
+                img.addEventListener('click', (e) => {
+                    showImage(encodeURIComponent(data.uploadPath + '/' + data.uuid + '_' + data.fileName));
+                });
+
+                img.src = imgSrc;
+                mainDiv.appendChild(img);
+            } else {
+                filePath = encodeURIComponent(data.uploadPath + '/' + data.uuid + '_' + data.fileName);
+                imgSrc = '/resources/img/attachIcon.png';
+
+                let aTag = document.createElement('a');
+                aTag.setAttribute('href', '../upload/download?fileName=' + filePath);
+                aTag.appendChild(img);
+
+                img.src = imgSrc;
+                mainDiv.appendChild(aTag);
+            }
+
+
+        });
     }
 
-    function registerTest() {
-        console.log("Register Test");
-
-        const boardId = '<c:out value="${board.id}"/>';
-        const testReply = {
-            boardId: boardId,
-            reply: 'Register Test With Client',
-            replier: 'ClientTest',
-        }
-
-        replyApi.register(testReply, textResultCallback, errorAlert);
+    function hideOriginImageDiv() {
+        $("#bigPictureWrapper").on("click", function (e) {
+            $("#bigPicture").animate({width: '0%', height: '0%'}, 1000);
+            setTimeout(() => {
+                $(this).hide();
+            }, 1000);
+        });
     }
 
-    function listTest() {
-        console.log("Get List Test");
-        const boardId = '<c:out value="${board.id}"/>';
-        const param = {
-            boardId,
-            page: 1,
-        };
+    function showImage(filePath) {
 
-        const testCallback = (numReplies, replies) => {
-            console.log('Total Count : ' + numReplies);
-            replies.forEach(reply => console.log(reply));
-        }
+        $("#bigPictureWrapper").css("display", "flex").show();
 
-        replyApi.getList(param, testCallback, errorAlert);
+        $("#bigPicture")
+            .html("<img src='../upload/display?fileName=" + filePath + "'>")
+            .animate({width: '100%', height: '100%'}, 1000);
     }
-
-    function removeTest() {
-        console.log('Remove Test');
-        const id = 14;
-
-        replyApi.remove(id, textResultCallback, errorAlert);
-    }
-
-    function updateTest() {
-        console.log('Update Test');
-        const boardId = '<c:out value="${board.id}"/>';
-
-        const param = {
-            boardId,
-            id: 15,
-            reply: 'Update after register data'
-        };
-
-        replyApi.update(param, textResultCallback, errorAlert);
-    }
-
-    function getTest() {
-        console.log('Get Test');
-        replyApi.get(12, console.log, errorAlert);
-    }
-
 </script>
 
 <%@include file="../includes/footer.jsp" %>

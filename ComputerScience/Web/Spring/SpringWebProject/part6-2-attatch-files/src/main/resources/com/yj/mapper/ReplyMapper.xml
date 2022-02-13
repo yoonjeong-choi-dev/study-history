@@ -40,4 +40,8 @@
         delete from reply where id=#{id}
     </delete>
 
+    <delete id="deleteByBoardId">
+        delete from reply where board_id=#{boardId}
+    </delete>
+
 </mapper>

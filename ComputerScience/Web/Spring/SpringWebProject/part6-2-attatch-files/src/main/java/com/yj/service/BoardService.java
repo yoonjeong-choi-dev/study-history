@@ -1,5 +1,6 @@
 package com.yj.service;
 
+import com.yj.domain.BoardAttachFileVO;
 import com.yj.domain.BoardVO;
 import com.yj.domain.PageCriteria;
 
@@ -16,4 +17,6 @@ public interface BoardService {
     public boolean modify(BoardVO board);
 
     public boolean remove(Long id);
+
+    public List<BoardAttachFileVO> getAttachList(Long id);
 }
