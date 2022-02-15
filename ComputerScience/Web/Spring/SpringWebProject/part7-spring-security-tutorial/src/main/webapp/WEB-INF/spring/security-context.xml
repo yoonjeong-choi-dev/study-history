@@ -8,6 +8,12 @@
     <bean id="customAccessDenied" class="com.yj.security.CustomAccessDeniedHandler"/>
     <bean id="customLoginSuccess" class="com.yj.security.CustomLoginSuccessHandler"/>
 
+    <!-- bean for not hashing password -->
+<!--    <bean id="customPasswordEncoder" class="com.yj.security.CustomNoOpsPasswordEncoder"/>-->
+
+    <!-- bean for hashing password -->
+    <bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
     <security:http>
         <security:intercept-url pattern="/auth/all" access="permitAll"/>
         <security:intercept-url pattern="/auth/member" access="hasRole('ROLE_MEMBER')"/>
@@ -25,10 +31,20 @@
     <!-- login user config -->
     <security:authentication-manager>
         <security:authentication-provider>
-            <security:user-service>
-                <security:user name="member" password="{noop}member" authorities="ROLE_MEMBER"/>
-                <security:user name="admin" password="{noop}admin" authorities="ROLE_MEMBER, ROLE_ADMIN"/>
-            </security:user-service>
+
+            <security:jdbc-user-service data-source-ref="dataSource"
+                                        users-by-username-query="select user_id, user_pw, enabled from member where user_id = ?"
+                                        authorities-by-username-query="select user_id, auth from member_auth where user_id = ?"/>
+            <security:password-encoder ref="bcryptPasswordEncoder"/>
+            <!-- 스프링 시큐리티에서 지정한 테이블 이용 -->
+<!--            <security:jdbc-user-service data-source-ref="dataSource"/>-->
+<!--            <security:password-encoder ref="customPasswordEncoder"/>-->
+
+            <!-- InMemoryDetailsManager 이용 -->
+<!--            <security:user-service>-->
+<!--                <security:user name="member" password="{noop}member" authorities="ROLE_MEMBER"/>-->
+<!--                <security:user name="admin" password="{noop}admin" authorities="ROLE_MEMBER, ROLE_ADMIN"/>-->
+<!--            </security:user-service>-->
         </security:authentication-provider>
     </security:authentication-manager>
 

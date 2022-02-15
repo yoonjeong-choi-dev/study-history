@@ -134,3 +134,101 @@
   * URI 지정 시, 로그아웃 폼 뷰를 반환하는 GET 컨트롤러 접근
     * 로그아웃 폼에서는 같은 이름의 URI로 POST 요청
     * POST 요청이기 때문에 CSRF 토큰 필요
+
+
+## Chapter 32. JDBC를 이용한 인증/권한 처리
+### JDBC를 이용하는 인증 방식
+* 스프링 시큐리티의 인증 및 인가 과정
+  * 인증과 권한에 대한 처리는 Authentication Manager 이용
+  * Authentication Manager는 인증 권한 정보를 제공하는 존재(Provider) 필요
+    * 이 존재는 UserDetailsService 인터페이스의 구현체
+    * 스프링 시큐리티는 다양한 구현 클래스를 이미 구현하여 제공
+    * 이전 챕터에서 security:user-service 태그를 통해 등록한 형태는 InMemoryDetailsManager 클래스를 이용한 것
+* JDBC 이용을 위한 테이블 설정 방법
+  * 지정된 형식으로 테이블 생성
+  * 기존 데이터베이스 이용
+
+### 스프링 시큐리티에서 지정한 SQL 사용하여 테이블 생성
+* 테이블 생성 쿼리
+  * 유저 테이블
+  ```
+  create table users
+  (
+    username varchar(50) not null primary key,
+    password varchar(255) not null,
+    enabled  boolean      not null default true
+  ) ENGINE=InnoDB;
+  ```
+  * 권한 테이블
+  ```
+  create table authorities
+  (
+    username varchar(50) not null,
+    authority varchar(50) not null,
+    constraint fk_authorities_users foreign key (username) references users (username),
+    unique index ix_auth_username(username, authority)
+  ) ENGINE=InnoDB;
+  ```
+  * 유저 데이터 생성
+  ```
+  insert into users (username, password) values ('user00', 'user00');
+  insert into users (username, password) values ('member00', 'member00');
+  insert into users (username, password) values ('admin00', 'admin00');
+  
+  insert into authorities (username, authority) value ('user00', 'ROLE_USER');
+  insert into authorities (username, authority) value ('member00', 'ROLE_MEMBER');
+  insert into authorities (username, authority) value ('admin00', 'ROLE_MEMBER');
+  insert into authorities (username, authority) value ('admin00', 'ROLE_ADMIN');
+  ```
+* security-context.xml 설정
+  * Provider로 JdbcUserDetailsManager 클래스 등록
+    * security:authentication-provider 태그 내에 security:jdbc-user-service 태그를 사용하여 등록
+    * data-source-ref 속성을 이용하여 데이터 소스에 해당하는 스프링 빈 객체 등록
+  * 인증/권한이 필요한 URI 접속 시, 별도 처리없이 위에서 생성한 테이블로 필요한 쿼리 호출
+* PasswordEncoder 문제
+  * 버전 5부터는 반드시 PasswordEncoder 지정 필요
+    * 패스워드 인코딩 처리 시, PasswordEncoder 인터페이스를 이용하여 인코딩
+    * 로그인 과정에서 인코딩 처리가 따로 필요
+  * 간단한 예제를 위해 인코딩 처리를 안하는 방법
+    * 버전 4까지는 별도의 인코딩 처리를 하지 않는 구현체 제공
+    * 버전 5부터는 따로 구현하여 사용(CustomNoOpsPasswordEncoder)
+      * 시큐리티 컨텍스트 설정 내부에 스프링 빈 등록
+
+### 기존 테이블에 대해서 스프링 시큐리티 이용
+* 일반적으로 사용하는 회원 및 권한 관련 테이블 쿼리
+  * 유저 테이블
+  ```
+  create table member
+  (
+    user_id varchar(50) not null primary key,
+    user_pw varchar(100) not null,
+    user_name varchar(100) not null,
+    registered_date datetime default CURRENT_TIMESTAMP,
+    modified_date   datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    enabled  boolean      not null default true
+  ) ENGINE = InnoDB default character set = utf8;
+  ```
+  * 권한 테이블
+  ```
+  create table member_auth
+  (
+    user_id varchar(50) not null,
+    auth varchar(50) not null,
+    constraint fk_member_auth foreign key (user_id) references member (user_id)
+  ) ENGINE = InnoDB default character set = utf8;
+  ```
+* security-context.xml 설정
+  * 기존 테이블을 이용하고 싶은 경우, 스프링 시큐리티에서 지정된 결과를 반환하는 쿼리를 추가하는 작업 필요
+  * security:jdbc-user-service 태그 속성을 이용하여 쿼리 지정
+    * users-by-username-query : 일반 시스템에서의 유저 Id
+    * authorities-by-user-name-query : 특정 유저 Id에 대한 권한 정보
+    * 속성 값은 PreparedStatement 구문 이용
+* PasswordEncoder 등록
+  * 기본적으로 암호 데이터를 데이터베이스에 저장 시 원본을 해싱하여 저장
+    * 서버 측에서도 사용자의 암호를 알지 않도록 하는 과정
+    * 사용자의 입력과 데이터베이스의 데이터에 대한 해시값을 사용하여 비교
+  * 스프링 시큐리티에서 제공하는 BcryptPasswordEncoder 클래스를 이용하여 사용 가능
+    * 시큐리티 컨텍스트에 빈으로 등록하여 사용
+  * 테스트 코드 작성(com.yj.security.MemberTests)
+    * 해시 처리가된 비밀번호를 가진 사용자 추가(testInsertMember)
+    * 추가된 사용자에 대해 권한 추가
