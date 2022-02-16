@@ -232,3 +232,86 @@
   * 테스트 코드 작성(com.yj.security.MemberTests)
     * 해시 처리가된 비밀번호를 가진 사용자 추가(testInsertMember)
     * 추가된 사용자에 대해 권한 추가
+
+
+## Chapter 33. 커스텀 UserDetailsService
+### UserDetailsService 인터페이스
+* JDBC 이용하는 방식의 단점
+  * 사용자의 제한된 정보만 이용
+  * 기본적인 방식에서는 username 정보만을 이용하여 사용자 인증
+* UserDetailsService 인터페이스 구현
+  * UseDetails 인터페이스를 반환하는 메서드 1개로 정의
+  * UseDetails 인터페이스
+    * 사용자의 자세한 정보를 반환하는 메서드들로 구성
+    * 직접 구현하여 사용 가능
+    * 스프링 시큐리티에서 제공하는 구현 클래스 사용 가능
+  * 일반적으로는 구현 클래스인 User 클래스를 상속받는 형태로 사용
+### 구현
+* 회원 정보를 이용하기 위한 모델 설계
+  * 기존에 구성한 2개의 테이블(유저 정보, 유저 권한)에 대한 VO 클래스
+  * Mapper 인터페이스 및 쿼리
+* 커스텀 유저 서비스 구현
+  * UserDetailsService 상속
+  * MemberMapper 인터페이스를 이용하여 인증에 필요한 정보들을 얻어옴
+    * 이때 의존성 주입 필요
+  * Mapper에서 반환된 vo 객체를 UsersDetails 타입으로 변환 필요
+    * User 클래스를 상속받은 클래스를 이용하여 구현
+* 시큐리티 컨텍스트 설정
+  * 커스텀 유저 서비스를 빈으로 등록 
+  * authentication-provider 속성값을 이용하여 등록
+
+
+## Chapter 34. JSP with 스프링 시큐리티
+* 스프링 시큐리티에서 제공하는 태그 라이브러리 이용
+
+
+## Chapter 35. 자동 로그인(remember-me)
+### 스프링에서의 자동 로그인
+* 자동 로그인
+  * 로그인 한 후, 일정 기간 동안 세션이 끊긴 후 다시 접속 시 로그인이 필요하지 않는 기능
+  * 브라우저의 쿠키 이용
+* 스프링 시큐리티에서 처리하는 방식
+  * 서버의 메모리 상 처리
+    * 서버가 여러 개인 경우 데이터 공유가 불가능
+  * 데이터베이스에서 처리
+    * 서버가 여러 개인 경우 데이터 공유 가능
+    * 로그아웃 시, 해당 정보가 테이블에서 삭제
+* 시큐리티 컨텍스트의 security:remember-me 태그 이용하여 속성 지정
+  * 쿠키 암호화를 키 값
+  * 데이터베이스 이용 시 DataSource
+  * 브라우저에 저장할 쿠키 이름
+  * 로그인 시, 자동 로그인 체크박스의 name 값
+  * 쿠키 유효 시간
+* 데이터베이스를 이용한 자동 로그인
+  * JDBC 처럼 스프링이 지정한 테이블을 생성하여 이용하는 방식
+    * 단순히 로그인 유지에 필요한 정보만 저장하므로 해당 방식 사용
+  * 직접 구현하는 방식
+
+### 구현
+* 테이블 생성
+```
+create table persistent_logins (
+    username varchar(64) not null,
+    series varchar(64) primary key,
+    token varchar(64) not null,
+    last_used timestamp not null
+);
+```
+* 시큐리티 컨텍스트에 
+  * 데이터 소스 설정
+  * 로그아웃 시 쿠키 삭제를 위해 security:logout 의 delete-cookies 속성에 쿠키 등록
+* 로그인 페이지에서 자동 로그인 체크박스 설정
+
+
+## Chapter 37. 어노테이션을 이용한 스프링 시큐리티 설정
+* 권한 설정을 위한 어노테이션
+  * @Secured
+    * 초기 버전부터 사용
+    * 괄호 안에 문자열이나 문자열 배열로 권한 이름 설정
+  * @PreAuthorize, @PostAuthorize
+    * 괄호 안에 표현식 사용 가능
+    * 최근에 많이 사용
+* servlet-context.xml 설정
+  * 스프링 시큐리티 어노테이션을 활성화하기 위한 설정
+  * 시큐리티 컨텍스트가 아닌 스프링 MVC 컨텍스트에 추가 필요
+* SampleController 컨트롤러에 예제 코드 추가

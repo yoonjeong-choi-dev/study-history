@@ -38,6 +38,9 @@
     <!-- transaction annotation scan -->
     <tx:annotation-driven/>
 
+    <mybatis-spring:scan base-package="com.yj.mapper"/>
+
+
     <!-- AOP Auto Proxy -->
     <aop:aspectj-autoproxy/>
 
