@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yj.mapper.BoardAttachFileMapper">
+
+    <insert id="insert">
+        insert into attach_file (uuid, upload_path, file_name, is_image, board_id)
+        values (#{uuid}, #{uploadPath}, #{fileName}, #{isImage}, #{boardId})
+    </insert>
+
+    <select id="selectByBoardId" resultType="com.yj.domain.BoardAttachFileVO">
+        select * from attach_file where board_id = #{id}
+    </select>
+
+
+    <delete id="delete">
+        delete from attach_file where uuid=#{uuid}
+    </delete>
+
+    <delete id="deleteByBoardId">
+        delete from attach_file where board_id=#{boardId}
+    </delete>
+
+    <select id="getOldFiles" resultType="com.yj.domain.BoardAttachFileVO">
+        select * from attach_file where upload_path = date_format(date_sub(now(), interval 1 day), '%Y/%m/%d');
+    </select>
+
+</mapper>
