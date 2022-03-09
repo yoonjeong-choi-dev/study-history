@@ -1,0 +1,5 @@
+#[ Written by FileProperties Adapter]
+#Tue Mar 08 02:09:20 KST 2022
+day=13
+year=1993
+month=7
