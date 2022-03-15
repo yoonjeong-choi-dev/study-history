@@ -6,6 +6,7 @@ playground/
 .vscode/
 .idea/
 *.iml
+out/
 
 # Docker
 /mysql_data
