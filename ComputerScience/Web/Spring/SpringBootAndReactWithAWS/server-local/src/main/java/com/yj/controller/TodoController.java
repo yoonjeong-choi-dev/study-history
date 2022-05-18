@@ -1,7 +1,7 @@
 package com.yj.controller;
 
 import com.yj.domain.todo.TodoEntity;
-import com.yj.dto.ResponseDTO;
+import com.yj.dto.ResponseListDTO;
 import com.yj.dto.todo.TodoDTO;
 import com.yj.service.TodoService;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +24,8 @@ public class TodoController {
         List<String> body = new ArrayList<>();
         body.add(str);
 
-        ResponseDTO<String> responseDTO = ResponseDTO.<String>builder().data(body).error("SUCCESS").build();
-        return ResponseEntity.ok(responseDTO);
+        ResponseListDTO<String> responseListDTO = ResponseListDTO.<String>builder().data(body).error("SUCCESS").build();
+        return ResponseEntity.ok(responseListDTO);
     }
 
     @GetMapping("/all")
@@ -33,7 +33,7 @@ public class TodoController {
         List<TodoEntity> entities = todoService.getAll();
         List<TodoDTO> responseBodies = entities.stream().map(TodoDTO::new).toList();
 
-        ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(responseBodies).build();
+        ResponseListDTO<TodoDTO> response = ResponseListDTO.<TodoDTO>builder().data(responseBodies).build();
         return ResponseEntity.ok(response);
     }
 
@@ -51,12 +51,12 @@ public class TodoController {
             List<TodoEntity> entities = todoService.create(todoEntity);
             List<TodoDTO> responseBodies = entities.stream().map(TodoDTO::new).toList();
 
-            ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(responseBodies).build();
+            ResponseListDTO<TodoDTO> response = ResponseListDTO.<TodoDTO>builder().data(responseBodies).build();
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
             String errorMessage = e.getMessage();
-            ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().error(errorMessage).build();
+            ResponseListDTO<TodoDTO> response = ResponseListDTO.<TodoDTO>builder().error(errorMessage).build();
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -71,7 +71,7 @@ public class TodoController {
         // Service 레이어를 이용하여 업데이트
         List<TodoEntity> entities = todoService.update(todoEntity);
         List<TodoDTO> responseBodies = entities.stream().map(TodoDTO::new).toList();
-        ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(responseBodies).build();
+        ResponseListDTO<TodoDTO> response = ResponseListDTO.<TodoDTO>builder().data(responseBodies).build();
         return ResponseEntity.ok(response);
     }
 
@@ -87,12 +87,12 @@ public class TodoController {
             List<TodoEntity> entities = todoService.delete(todoEntity);
             List<TodoDTO> responseBodies = entities.stream().map(TodoDTO::new).toList();
 
-            ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(responseBodies).build();
+            ResponseListDTO<TodoDTO> response = ResponseListDTO.<TodoDTO>builder().data(responseBodies).build();
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
             String errorMessage = e.getMessage();
-            ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().error(errorMessage).build();
+            ResponseListDTO<TodoDTO> response = ResponseListDTO.<TodoDTO>builder().error(errorMessage).build();
             return ResponseEntity.badRequest().body(response);
         }
     }
