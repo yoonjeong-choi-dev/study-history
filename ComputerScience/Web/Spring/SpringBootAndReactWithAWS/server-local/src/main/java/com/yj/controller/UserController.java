@@ -4,6 +4,7 @@ import com.yj.domain.user.UserEntity;
 import com.yj.dto.ResponseListDTO;
 import com.yj.dto.ResponseSingleDTO;
 import com.yj.dto.user.UserDTO;
+import com.yj.security.TokenProvider;
 import com.yj.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class UserController {
     private final UserService userService;
+    private final TokenProvider tokenProvider;
 
     @PostMapping("/signup")
     public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
@@ -54,9 +56,12 @@ public class UserController {
         UserEntity user = userService.getByCredential(userDTO.getEmail(), userDTO.getPassword());
 
         if (user != null) {
+            // 토큰 생성
+            final String token = tokenProvider.create(user);
             final UserDTO responseData = UserDTO.builder()
                     .email(user.getEmail())
                     .id(user.getId())
+                    .token(token)
                     .build();
 
             response = ResponseSingleDTO.<UserDTO>builder().data(responseData).build();

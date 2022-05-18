@@ -15,3 +15,5 @@ spring:
     properties:
       hibernate:
         format_sql: true
+jwt:
+  secret: yooneong-choi-jwt-secret-key-for-springboot
