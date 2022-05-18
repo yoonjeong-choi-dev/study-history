@@ -9,6 +9,7 @@ const Todo = (props) => {
     const thisItem = state.item;
     thisItem.done = !thisItem.done;
     setState({ item: thisItem });
+    props.update(state.item);
   };
 
   const onClickDelete = () => {
@@ -30,6 +31,8 @@ const Todo = (props) => {
         ...state,
         readOnly: true,
       });
+
+      props.update(state.item);
     }
   };
 

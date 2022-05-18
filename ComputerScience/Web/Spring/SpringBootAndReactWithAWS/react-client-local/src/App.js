@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { callAPI } from './shared/APIService';
 import Todo from './component/Todo';
 import TodoCreate from './component/TodoCreate';
 import { Paper, List, Container, Typography } from '@material-ui/core';
@@ -6,32 +7,72 @@ import { Paper, List, Container, Typography } from '@material-ui/core';
 const App = () => {
   const [state, setState] = useState(
     {
-      items: [
-        { id: '0', title: 'Todo Test 1', done: true },
-        { id: '1', title: 'Todo Test 2', done: false },
-      ]
+      items: [],
+      loading: true,
     }
   );
 
+  // useEffect(() => {
+  //   fetch('http://localhost:2205/todo/all', {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     }
+  //   })
+  //     .then(res => res.json())
+  //     .then(res => {
+  //       setState({
+  //         items: res.data,
+  //         loading: false,
+  //       })
+  //     })
+  //     .catch(err => {
+  //       console.error(err);
+  //       setState({
+  //         items: [],
+  //         loading: true,
+  //         error: err
+  //       });
+  //     });
+  // }, []);
+
+  useEffect(() => {
+    callAPI('/todo/all', 'GET', null)
+      .then((res) =>
+        setState({ items: res.data, loading: false })
+      );
+  }, []);
+
   const addTodo = (item) => {
-    const items = state.items;
-    item.id = 'ID-' + items.length;
-    item.done = false;
-    items.push(item);
-    setState({ items: items });
+    callAPI('/todo', 'POST', item)
+      .then((res) =>
+        setState({ ...state, items: res.data })
+      );
   };
 
   const deleteTodo = (item) => {
-    const items = state.items;
-    const itemsAfterDelete = items.filter(i => i.id !== item.id);
-    setState({ items: itemsAfterDelete });
+    callAPI('/todo', 'DELETE', item)
+      .then((res) =>
+        setState({ ...state, items: res.data })
+      );
+  };
+
+  const updateTodo = (item) => {
+    callAPI('/todo', 'PUT', item)
+      .then((res) =>
+        setState({ ...state, items: res.data })
+      );
   };
 
   let todoItems = state.items.length > 0 && (
     <Paper style={{ margin: 16 }}>
       <List>
         {state.items.map((item) => {
-          return <Todo item={item} key={item.id} delete={deleteTodo} />;
+          return <Todo
+            item={item} key={item.id}
+            delete={deleteTodo}
+            update={updateTodo}
+          />;
         })}
       </List>
     </Paper>
