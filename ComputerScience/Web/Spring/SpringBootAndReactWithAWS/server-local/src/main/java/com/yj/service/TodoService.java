@@ -66,7 +66,7 @@ public class TodoService {
     }
 
 
-    private List<TodoEntity> getResultByUserId(String userId) {
+    public List<TodoEntity> getResultByUserId(String userId) {
         return todoRepository.findByUserId(userId);
     }
 

@@ -4,6 +4,7 @@ import com.yj.domain.user.UserEntity;
 import com.yj.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     public UserEntity createUser(final UserEntity userEntity) {
         if (userEntity == null || userEntity.getEmail() == null) {
@@ -29,6 +32,14 @@ public class UserService {
     }
 
     public UserEntity getByCredential(final String email, final String password) {
-        return userRepository.findByEmailAndPassword(email, password);
+
+        final UserEntity originalUser = userRepository.findByEmail(email);
+
+        // email 유저가 존재하는 경우, 비밀번호 같은지 확인
+        if(originalUser != null && passwordEncoder.matches(password, originalUser.getPassword())){
+            return originalUser;
+        } else {
+            return null;
+        }
     }
 }

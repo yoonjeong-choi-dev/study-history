@@ -1,7 +1,6 @@
 package com.yj.controller;
 
 import com.yj.domain.user.UserEntity;
-import com.yj.dto.ResponseListDTO;
 import com.yj.dto.ResponseSingleDTO;
 import com.yj.dto.user.UserDTO;
 import com.yj.security.TokenProvider;
@@ -9,6 +8,7 @@ import com.yj.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +22,8 @@ public class UserController {
     private final UserService userService;
     private final TokenProvider tokenProvider;
 
+    private final PasswordEncoder passwordEncoder;
+
     @PostMapping("/signup")
     public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
         ResponseSingleDTO<UserDTO> response;
@@ -29,7 +31,7 @@ public class UserController {
             UserEntity user = UserEntity.builder()
                     .email(userDTO.getEmail())
                     .username(userDTO.getUsername())
-                    .password(userDTO.getPassword())
+                    .password(passwordEncoder.encode(userDTO.getPassword()))
                     .build();
 
             UserEntity registeredUser = userService.createUser(user);

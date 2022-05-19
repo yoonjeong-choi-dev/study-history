@@ -6,6 +6,7 @@ import com.yj.dto.todo.TodoDTO;
 import com.yj.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -37,15 +38,21 @@ public class TodoController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
-    public ResponseEntity<?> createTodo(@RequestBody TodoDTO dto) {
-        try {
-            // Temp user : 유저 인증 처리전까지의 임시 유저 아이디 등록
-            String tempUserId = "temp-user-before-setting-security";
+    @GetMapping
+    public ResponseEntity<?> getTodoList(@AuthenticationPrincipal String userId) {
+        List<TodoEntity> entities = todoService.getResultByUserId(userId);
+        List<TodoDTO> responseBodies = entities.stream().map(TodoDTO::new).toList();
 
+        ResponseListDTO<TodoDTO> response = ResponseListDTO.<TodoDTO>builder().data(responseBodies).build();
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createTodo(@AuthenticationPrincipal String userId, @RequestBody TodoDTO dto) {
+        try {
             TodoEntity todoEntity = TodoDTO.toEntity(dto);
             todoEntity.setId(null);
-            todoEntity.setUserId(tempUserId);
+            todoEntity.setUserId(userId);
 
             // Service 레이어를 이용하여 저장
             List<TodoEntity> entities = todoService.create(todoEntity);
@@ -62,11 +69,9 @@ public class TodoController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateTodo(@RequestBody TodoDTO dto) {
-        // Temp user : 유저 인증 처리전까지의 임시 유저 아이디 등록
-        String tempUserId = "temp-user-before-setting-security";
+    public ResponseEntity<?> updateTodo(@AuthenticationPrincipal String userId, @RequestBody TodoDTO dto) {
         TodoEntity todoEntity = TodoDTO.toEntity(dto);
-        todoEntity.setUserId(tempUserId);
+        todoEntity.setUserId(userId);
 
         // Service 레이어를 이용하여 업데이트
         List<TodoEntity> entities = todoService.update(todoEntity);
@@ -76,12 +81,10 @@ public class TodoController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteTodo(@RequestBody TodoDTO dto) {
+    public ResponseEntity<?> deleteTodo(@AuthenticationPrincipal String userId, @RequestBody TodoDTO dto) {
         try {
-            // Temp user : 유저 인증 처리전까지의 임시 유저 아이디 등록
-            String tempUserId = "temp-user-before-setting-security";
             TodoEntity todoEntity = TodoDTO.toEntity(dto);
-            todoEntity.setUserId(tempUserId);
+            todoEntity.setUserId(userId);
 
             // Service 레이어를 이용하여 저장
             List<TodoEntity> entities = todoService.delete(todoEntity);
