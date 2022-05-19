@@ -1,40 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { callAPI } from './shared/APIService';
-import Todo from './component/Todo';
-import TodoCreate from './component/TodoCreate';
+import { callAPI } from '../shared/APIService';
+import Todo from '../component/todo/Todo';
+import TodoCreate from '../component/todo/TodoCreate';
 import { Paper, List, Container, Typography } from '@material-ui/core';
 
-const App = () => {
+const TodoPage = () => {
   const [state, setState] = useState(
     {
       items: [],
       loading: true,
     }
   );
-
-  // useEffect(() => {
-  //   fetch('http://localhost:2205/todo/all', {
-  //     method: 'GET',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  //     .then(res => res.json())
-  //     .then(res => {
-  //       setState({
-  //         items: res.data,
-  //         loading: false,
-  //       })
-  //     })
-  //     .catch(err => {
-  //       console.error(err);
-  //       setState({
-  //         items: [],
-  //         loading: true,
-  //         error: err
-  //       });
-  //     });
-  // }, []);
 
   useEffect(() => {
     callAPI('/todo/all', 'GET', null)
@@ -90,4 +66,4 @@ const App = () => {
   );
 }
 
-export default App;
+export default TodoPage;

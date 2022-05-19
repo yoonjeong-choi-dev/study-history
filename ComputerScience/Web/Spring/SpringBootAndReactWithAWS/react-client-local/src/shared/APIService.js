@@ -24,7 +24,11 @@ export function callAPI(apiResource, method, reqBody) {
     )
     .catch((error) => {
       console.log(error.status);
-      console.error(error);
+      if(error.status === 403) {
+        window.location.href = '/login';
+      } else {
+        console.error(error);
+      }
       return Promise.reject(error);
     });
 }
