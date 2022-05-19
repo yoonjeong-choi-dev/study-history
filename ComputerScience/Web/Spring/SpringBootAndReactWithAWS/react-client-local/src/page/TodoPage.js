@@ -13,7 +13,7 @@ const TodoPage = () => {
   );
 
   useEffect(() => {
-    callAPI('/todo/all', 'GET', null)
+    callAPI('/todo', 'GET', null)
       .then((res) =>
         setState({ items: res.data, loading: false })
       );
