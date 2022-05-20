@@ -7,6 +7,7 @@ import { Typography } from "@material-ui/core";
 
 import TodoPage from "./page/TodoPage";
 import Login from "./component/auth/Login";
+import SignUp from "./component/auth/SignUp";
 
 const CopyRight = () => {
   return (
@@ -25,7 +26,8 @@ const AppRouter = () => {
         <div>
           <Routes>
             <Route exact path="/" element={<TodoPage />} />
-            <Route excat path="/login" element={<Login/>}/>
+            <Route excat path="/login" element={<Login />} />
+            <Route exact path="/signup" element={<SignUp />} />
           </Routes>
         </div>
         <Box mt={5}>

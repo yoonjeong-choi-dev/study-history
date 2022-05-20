@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { callAPI } from '../shared/APIService';
+import { Paper, List, Container, Grid, Button, AppBar, Toolbar, Typography } from '@material-ui/core';
+
 import Todo from '../component/todo/Todo';
 import TodoCreate from '../component/todo/TodoCreate';
-import { Paper, List, Container, Typography } from '@material-ui/core';
+import { callAPI, signout } from '../shared/APIService';
+
 
 const TodoPage = () => {
   const [state, setState] = useState(
@@ -54,14 +56,43 @@ const TodoPage = () => {
     </Paper>
   );
 
+  let navigationBar = (
+    <AppBar position='static'>
+      <Toolbar>
+        <Grid justifyContent='space-between' container>
+          <Grid item>
+            <Typography variant='h6'>Todo App!</Typography>
+          </Grid>
 
-  return (
-    <div style={{ paddingTop: 40 }}>
-      <Container>
-        <Typography variant="h3">Todo App Local Client</Typography>
+          <Grid>
+            <Button color='inherit' onClick={signout}>
+              로그아웃
+            </Button>
+          </Grid>
+
+        </Grid>
+      </Toolbar>
+    </AppBar>
+  );
+
+  let todoPage = (
+    <div>
+      {navigationBar}
+      <Container maxWidth='md'>
         <TodoCreate add={addTodo} />
         <div className='TodoList'>{todoItems}</div>
       </Container>
+    </div>
+  );
+
+  let loadingPage = <h1>Loading...</h1>;
+
+  let content = loadingPage;
+  if(!state.loading) content = todoPage;
+
+  return (
+    <div style={{ paddingTop: 40, textAlign: 'center' }}>
+      {content}
     </div>
   );
 }
